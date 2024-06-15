@@ -33,14 +33,16 @@ function App() {  // Remove export default
           component={SplashScreen}
           options={{ headerShown: false }}
         />
+
+        {/* gestureEnabled not allow to go back by scrolling the page left */}
         <Stack.Screen name="Login" component={Login} 
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen name="Signup" component={Signup}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen name="Home" component={Home} 
-        options={{headerShown: false}}/>
+        options={{headerShown: false,  gestureEnabled: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

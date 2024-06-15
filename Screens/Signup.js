@@ -120,108 +120,106 @@ const Signup = () => {
     }
   };
 
-
-// const isUsernameUnique = async (newUsername) => {
+  // const isUsernameUnique = async (newUsername) => {
   //   const keys = await AsyncStorage.getAllKeys();
   //   const usernameExists = keys.some((key) => key === `${newUsername}_key`);
   //   return !usernameExists;
   // };
-
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.keyboardAvoidingView}
     >
-    <ScrollView contentContainerStyle={styles.contentContainer}>
-      <View style={styles.content}>
-        <View style={styles.registrationContainer}>
-          <Image
-            source={require("../Images/logoapp.png")}
-            style={styles.logo}
-          />
-          <Text style={styles.title}>Sign up</Text>
-          <View style={styles.row}>
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              autoCapitalize="none"
-              value={username}
-              onChangeText={handleUsernameChange}
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.content}>
+          <View style={styles.registrationContainer}>
+            <Image
+              source={require("../Images/logoapp.png")}
+              style={styles.logo}
             />
-          </View>
-          <View style={styles.row}>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={handlePasswordChange}
-            />
-          </View>
-
-          <View style={styles.radioGroup}>
-            <View style={styles.radioButton}>
-              <RadioButton.Android
-                value={userGender}
-                status={userGender === "F" ? "checked" : "unchecked"}
-                onPress={() => setUserGender("F")}
-                color="#0b2b2f"
+            <Text style={styles.title}>Sign up</Text>
+            <View style={styles.row}>
+              <TextInput
+                style={styles.input}
+                placeholder="Username"
+                autoCapitalize="none"
+                value={username}
+                onChangeText={handleUsernameChange}
               />
-              <Text style={styles.radioLabel}>F</Text>
+            </View>
+            <View style={styles.row}>
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={handlePasswordChange}
+              />
             </View>
 
-            <View style={styles.radioButton}>
-              <RadioButton.Android
-                value={userGender}
-                status={userGender === "M" ? "checked" : "unchecked"}
-                onPress={() => setUserGender("M")}
-                color="#0b2b2f"
-              />
-              <Text style={styles.radioLabel}>M</Text>
-            </View>
+            <View style={styles.radioGroup}>
+              <View style={styles.radioButton}>
+                <RadioButton.Android
+                  value={userGender}
+                  status={userGender === "F" ? "checked" : "unchecked"}
+                  onPress={() => setUserGender("F")}
+                  color="#0b2b2f"
+                />
+                <Text style={styles.radioLabel}>F</Text>
+              </View>
 
-            <View style={styles.radioButton}>
-              <RadioButton.Android
-                value={userGender}
-                status={userGender === "Other" ? "checked" : "unchecked"}
-                onPress={() => setUserGender("Other")}
-                color="#0b2b2f"
-              />
-              <Text style={styles.radioLabel}>Other</Text>
+              <View style={styles.radioButton}>
+                <RadioButton.Android
+                  value={userGender}
+                  status={userGender === "M" ? "checked" : "unchecked"}
+                  onPress={() => setUserGender("M")}
+                  color="#0b2b2f"
+                />
+                <Text style={styles.radioLabel}>M</Text>
+              </View>
+
+              <View style={styles.radioButton}>
+                <RadioButton.Android
+                  value={userGender}
+                  status={userGender === "Other" ? "checked" : "unchecked"}
+                  onPress={() => setUserGender("Other")}
+                  color="#0b2b2f"
+                />
+                <Text style={styles.radioLabel}>Other</Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.textOptions}>Age:</Text>
-            <TextInput
-              style={styles.inputOptions}
-              placeholder="30"
-              value={userAge}
-              onChangeText={handleUserAgeChange}
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.textOptions}>Height (cm):</Text>
-            <TextInput
-              style={styles.inputOptions}
-              placeholder="170"
-              value={userHeight}
-              onChangeText={handleUserHeightChange}
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.textOptions}>Weight (kg):</Text>
-            <TextInput
-              style={styles.inputOptions}
-              placeholder="70"
-              value={userWeight}
-              onChangeText={handleUserWeightChange}
-              keyboardType="numeric"
-            />
-          </View>
-          {/* <View style={styles.buttonRow}>
+            <View style={styles.row}>
+              <Text style={styles.textOptions}>Age:</Text>
+              <TextInput
+                style={styles.inputOptions}
+                placeholder="30"
+                value={userAge}
+                onChangeText={handleUserAgeChange}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.textOptions}>Height (cm):</Text>
+              <TextInput
+                style={styles.inputOptions}
+                placeholder="170"
+                value={userHeight}
+                onChangeText={handleUserHeightChange}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.textOptions}>Weight (kg):</Text>
+              <TextInput
+                style={styles.inputOptions}
+                placeholder="70"
+                value={userWeight}
+                onChangeText={handleUserWeightChange}
+                keyboardType="numeric"
+              />
+            </View>
+            {/* <View style={styles.buttonRow}>
             <TouchableOpacity
               style={styles.buttonOptionsDiet}
               onPress={() => handleUserDietChange("Vegetarian")}
@@ -247,40 +245,43 @@ const Signup = () => {
               <Text style={styles.buttonTextOptions}>Other</Text>
             </TouchableOpacity>
           </View> */}
-          <View style={styles.row}>
-            <Text style={styles.textOptions}>Diet</Text>
-            <View style={styles.containerPicker}>
-              <RNPickerSelect
-                onValueChange={(value) => handleUserDietChange(value)}
-                items={[
-                  { label: "Vegetarian", value: "Vegetarian" },
-                  { label: "Vegan", value: "Vegan" },
-                  { label: "Omnivorous", value: "Omnivorous" },
-                  { label: "Other", value: "Other" },
-                ]}
-                style={pickerSelectStyles}
-                placeholder={{ label: "Select a diet...", value: null }}
-              />
+            <View style={styles.row}>
+              <Text style={styles.textOptions}>Diet</Text>
+              <View style={styles.containerPicker}>
+                <RNPickerSelect
+                  onValueChange={(value) => handleUserDietChange(value)}
+                  items={[
+                    { label: "Vegetarian", value: "Vegetarian" },
+                    { label: "Vegan", value: "Vegan" },
+                    { label: "Omnivorous", value: "Omnivorous" },
+                    { label: "Other", value: "Other" },
+                  ]}
+                  style={pickerSelectStyles}
+                  placeholder={{ label: "Select a diet...", value: null }}
+                />
+              </View>
             </View>
-          </View>
 
-          <View style={styles.row}>
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-            <Pressable style={styles.buttonRegistration} onPress={handleSignup}>
-              <Text style={styles.buttonText}>Register</Text>
-            </Pressable>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.backToLogin}>
-              <Text style={styles.text}>Back to</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text style={styles.linkText}>Login</Text>
-              </TouchableOpacity>
+            <View style={styles.row}>
+              {error ? <Text style={styles.errorText}>{error}</Text> : null}
+              <Pressable
+                style={styles.buttonRegistration}
+                onPress={handleSignup}
+              >
+                <Text style={styles.buttonText}>Register</Text>
+              </Pressable>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.backToLogin}>
+                <Text style={styles.text}>Back to</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                  <Text style={styles.linkText}>Login</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -299,7 +300,6 @@ const styles = StyleSheet.create({
     marginTop: 100,
     backgroundColor: "#f9f8eb",
     marginBottom: 40,
-
   },
   logo: {
     width: 100,

@@ -32,6 +32,7 @@
         {
           "photosPermission": "custom photos permission",
           "cameraPermission": "Allow FitnessApp to open the camera",
+          
 
           "//": "Disables the microphone permission",
           "microphonePermission": false

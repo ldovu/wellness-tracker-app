@@ -83,7 +83,7 @@ export const saveActivities = async (activities) => {
 };
 
 // Get meals
-export const getMeals = async () => {
+export const loadMeals = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem(Meals_KEY);
     return jsonValue != null ? JSON.parse(jsonValue) : [];
