@@ -16,7 +16,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useUser } from "./UserContext";
-import { loadMeals, saveMeals } from "../Data";
+import { getMeals, saveMeal } from "../Data";
 import * as ImagePicker from "expo-image-picker";
 import ActionSheet from "react-native-actionsheet";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -28,7 +28,9 @@ const SettingsScreen = () => {
 
   const [image, setImage] = useState("");
   const actionSheetRef = useRef();
-
+// Handle function for adding a photo:
+  //    it shows a dropdown menu and allow the user to pick an image from the gallery
+  //    or take a photo with the camera
 
   useEffect(() => {
     (async () => {
@@ -39,9 +41,7 @@ const SettingsScreen = () => {
     })();
   }, []);
 
-  // Handle function for adding a photo:
-  //    it shows a dropdown menu and allow the user to pick an image from the gallery
-  //    or take a photo with the camera
+  
   const handleActionSheet = (index) => {
     if (index === 0) {
       pickImage();
@@ -96,7 +96,7 @@ const SettingsScreen = () => {
             onPress={() => actionSheetRef.current.show()}
             style={styles.iconButton}
           >
-            <Icon name="add-a-photo" size={40} color="#0b2b2f" />
+            <Icon name="add-a-photo" size={30} color="#0b2b2f" />
           </TouchableOpacity>
           {image ? (
             <View style={styles.imageContainer}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -13,25 +13,99 @@ import {
   Image,
   Platform,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { useUser } from "./UserContext";
-import { useNavigation } from "@react-navigation/native";
+import { getTrainings } from "../Data";
+import ActionSheet from "react-native-actionsheet";
 
 const TrainingScreen = () => {
   const navigation = useNavigation();
   const userData = useUser();
+  const [trainings, setTrainings] = useState([]);
+  const actionSheetRef = useRef();
 
-  const handleAddMealPress = () => {
+  const handleAddTrainingPress = () => {
     navigation.navigate("AddTraining");
+  };
+
+  const fetchTrainings = async () => {
+    try {
+      const storedTrainings = await getTrainings();
+      if (Array.isArray(storedTrainings)) {
+        const userTrainings = storedTrainings.filter(
+          (training) => training.userTraining === userData.username
+        );
+        console.log("User trainings:", userTrainings);
+        setTrainings(userTrainings);
+      } else {
+        setTrainings([]);
+      }
+    } catch (error) {
+      console.error("Error fetching trainings", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTrainings();
+    }, [])
+  );
+
+  const renderTrainings = () => {
+    const groupedTrainings = trainings.reduce((acc, training) => {
+      const date = training.stringDate;
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(training);
+      return acc;
+    }, {});
+
+    const sortedTrainings = Object.keys(groupedTrainings).sort(
+      (a, b) => new Date(a) - new Date(b)
+    );
+
+    return sortedTrainings.map((date) => {
+      const trainingsForDate = groupedTrainings[date];
+      return (
+        <View key={date} style={styles.trainingGroup}>
+          <Text style={styles.dateText}>{date}</Text>
+          {trainingsForDate.map((training, index) => (
+            <View key={index} style={styles.trainingItem}>
+              <View style={styles.trainingDetails}>
+                <Text style={styles.trainingSports}>{training.sport}</Text>
+                <Text style={styles.trainingText}>{training.duration}</Text>
+                <Text style={styles.trainingText}>
+                  {training.burntCalories}
+                </Text>
+                <Text style={styles.trainingText}>{training.description}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      );
+    });
   };
 
   console.log("User data in Training:", userData);
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <TouchableOpacity style={styles.button} onPress={handleAddMealPress}>
+      <View style={styles.contentContainer}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          {renderTrainings()}
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleAddTrainingPress}
+        >
           <Text style={styles.buttonText}> + Add New Training</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -42,14 +116,25 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
     backgroundColor: "#f9f8eb",
   },
+  contentContainer: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  scrollViewContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 100,
+    marginTop: 20,
+  },
 
   image: {
     width: 100,
     height: 100,
   },
-
+  // Button positioned at the bottom of the screen as it is more user-friendly
   button: {
-    width: "70%",
+    position: "absolute",
+    bottom: 10,
+    width: "60%",
     height: 45,
     backgroundColor: "#0b2b2f",
     justifyContent: "center",
@@ -57,6 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 5,
     alignSelf: "center",
+    marginHorizontal: 20,
     marginBottom: 20,
   },
   buttonText: {
@@ -69,24 +155,41 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  imageContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  scrollViewContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    marginTop: 20,
-  },
   title: {
     fontSize: 54,
     fontWeight: "bold",
     marginBottom: 20,
   },
-  welcome: {
-    fontSize: 40,
-    marginBottom: 16,
+
+  trainingGroup: {
+    marginBottom: 20,
+  },
+  dateText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+
+  trainingItem: {
+    backgroundColor: "#f0f0f0",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginVertical: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  trainingDetails: {
+    flex: 1,
+  },
+  trainingSports: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  trainingText: {
+    fontSize: 16,
   },
 });
 

@@ -17,14 +17,18 @@ import {
 } from "react-native";
 import { useUser } from "./UserContext";
 import { useNavigation } from "@react-navigation/native";
-import { saveMeals } from "../Data";
+import { saveMeal } from "../Data";
 import RNPickerSelect from "react-native-picker-select";
 import DatePicker from "../Components/DatePicker";
 import DietScreen from "./DietScreen";
 
 const AddMealScreen = () => {
   const userData = useUser();
-  const [userMeal, setUserMeal] = useState("");
+
+  // The user associated with the meal is the logged in user
+  const userMeal = userData.username;
+
+  // console.log(userData.username);  // ludov
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("");
   const [calories, setCalories] = useState("");
@@ -33,10 +37,6 @@ const AddMealScreen = () => {
   const [error, setError] = useState("");
 
   const navigation = useNavigation();
-
-  const handleUserMealChange = (userMeal) => {
-    setUserMeal(userData.username);
-  };
 
   const handleDateChange = (date) => {
     setDate(date);
@@ -62,13 +62,19 @@ const AddMealScreen = () => {
   const handleAddMeal = async () => {
     if (!date || !category || !mealDetails) {
       setError("Fill main fields");
-      return;
+      return; 
     }
 
     setError("");
+    stringDate = date.toDateString();
+    // console.log("Tipo date:", typeof date);   // object
+    // console.log("Date:", date);               // 2024-06-16T08:26:56.740Z
+    // console.log("Tipo string date:", typeof stringDate);  // string
+    // console.log("String date:", stringDate);   // Sun Jun 16 2024
+
     const meal = {
       userMeal,
-      date,
+      stringDate,
       category,
       calories,
       mealDetails,
@@ -76,11 +82,11 @@ const AddMealScreen = () => {
     console.log("Meal:", meal);
     try {
       // Server function for storing meal with AsyncStorage
-      await saveMeals(meal);
+      await saveMeal(meal);
       console.log("Meal saved", meal);
 
       // Navigate to the Diet screen
-      navigation.navigate("Dietscreen");
+      navigation.navigate("DietScreen");
     } catch (error) {
       console.error("Error saving meal:", error);
       setError(error.message);
