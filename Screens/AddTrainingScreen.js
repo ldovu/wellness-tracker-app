@@ -31,12 +31,24 @@ const AddTrainingScreen = () => {
   // console.log(userData.username);  // ludov
   const [date, setDate] = useState("");
   const [sport, setSport] = useState("");
-  const [hours, setHours] = useState("");
-  const [minutes, setMinutes] = useState("");
+  const [selectedHour, setSelectedHour] = useState(null);
+  const [selectedMinute, setSelectedMinute] = useState(null);
+
   const [burntCalories, setBurntCalories] = useState("");
   const [description, setDescription] = useState("");
 
   const [error, setError] = useState("");
+
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const hours = Array.from({ length: 24 }, (_, i) => ({
+    label: `${i}`,
+    value: i,
+  }));
+  const minutes = Array.from({ length: 60 }, (_, i) => ({
+    label: `${i}`,
+    value: i,
+  }));
 
   const navigation = useNavigation();
 
@@ -48,11 +60,11 @@ const AddTrainingScreen = () => {
     setSport(sport);
   };
   const handleHoursChange = (hours) => {
-    setHours(hours);
+    setSelectedHour(hours);
   };
 
   const handleMinutesChange = (minutes) => {
-    setMinutes(minutes);
+    setSelectedMinute(minutes);
   };
 
   const handleBurntCaloriesChange = (calories) => {
@@ -153,21 +165,37 @@ const AddTrainingScreen = () => {
             </View>
             <View style={styles.row}>
               <Text style={styles.textOptions}>Duration</Text>
-              <View style={styles.durationContainer}>
+              {/* <View style={styles.durationContainer}>
                 <RNPickerSelect
-                  onValueChange={(value) => setHours(value)}
-                  items={generatePickerItems(23)}
-                  style={pickerSelectStyles}
-                  placeholder={{ label: "H", value: null }}
+                  onValueChange={handleMinutesChange}
+                  items={hours}
+                  placeholder={{ label: "hrs", value: null }}
+                  style={pickerHrsMin}
                 />
                 <RNPickerSelect
-                  onValueChange={(value) => setMinutes(value)}
-                  items={generatePickerItems(59)}
-                  style={pickerSelectStyles}
-                  placeholder={{ label: "M", value: null }}
+                  onValueChange={handleHoursChange}
+                  items={minutes}
+                  placeholder={{ label: "min", value: null }}
+                  style={pickerHrsMin}
+                />
+              </View> */}
+              <View style={styles.durationContainer}>
+                <RNPickerSelect
+                  onValueChange={handleHoursChange}
+                  items={hours}
+                  placeholder={{ label: "hrs...", value: null }}
+                  style={pickerHrsMin}
+                />
+                <View style={styles.spaceBetween} />
+                <RNPickerSelect
+                  onValueChange={handleMinutesChange}
+                  items={minutes}
+                  placeholder={{ label: "min...", value: null }}
+                  style={pickerHrsMin}
                 />
               </View>
             </View>
+
             <View style={styles.row}>
               <Text style={styles.textOptions}>Calories</Text>
               <TextInput
@@ -251,6 +279,8 @@ const styles = StyleSheet.create({
   containerPicker: {
     width: "40%",
     marginRight: 40,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   textOptions: {
     flex: 1,
@@ -293,8 +323,12 @@ const styles = StyleSheet.create({
   },
   durationContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     marginRight: 40,
+    alignItems: "center",
+  },
+  spaceBetween: {
+    width: 10, // You can adjust this width to add more or less space
   },
 });
 
@@ -318,6 +352,44 @@ const pickerSelectStyles = StyleSheet.create({
   inputAndroid: {
     width: "100%",
     height: 55,
+    backgroundColor: "#0b2b2f",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    color: "#f9f8eb",
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "YourCustomFont",
+  },
+  placeholder: {
+    color: "#f9f8eb",
+    fontFamily: "YourCustomFont",
+  },
+});
+
+const pickerHrsMin = StyleSheet.create({
+  inputIOS: {
+    width: "100%",
+    height: 40,
+    backgroundColor: "#0b2b2f",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+
+    color: "#f9f8eb",
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "YourCustomFont",
+  },
+  inputAndroid: {
+    width: "100%",
+    height: 40,
     backgroundColor: "#0b2b2f",
     justifyContent: "center",
     alignItems: "center",

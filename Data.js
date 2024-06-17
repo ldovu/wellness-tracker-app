@@ -18,6 +18,31 @@ export const getUser = async (username) => {
   }
 };
 
+// export const deleteLastUser = async () => {
+//   try {
+//     // Retrieve existing users
+//     const users = await getUsers();
+    
+//     // Check if there are users to delete
+//     if (users.length === 0) {
+//       console.log("No users found to delete.");
+//       return false;
+//     }
+
+//     // Remove the last user from the array
+//     const removedUser = users.pop();
+
+//     // Remove the user from AsyncStorage
+//     await AsyncStorage.removeItem(`${removedUser.username}${Users_KEY}`);
+
+//     console.log(`User ${removedUser.username} deleted successfully.`);
+//     return true;
+//   } catch (error) {
+//     console.error("Error deleting the last user: ", error);
+//     return false;
+//   }
+// };
+
 // Get all users
 export const getUsers = async () => {
   try {

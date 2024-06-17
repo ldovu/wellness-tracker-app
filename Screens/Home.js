@@ -69,17 +69,6 @@ const Home = ({ route }) => {
   }
 
   return (
-    // <SafeAreaView style={styles.container}>
-    //   <ScrollView contentContainerStyle={styles.scrollViewContent}>
-    //     <Text style={styles.title}>Home Screen</Text>
-    //     <Text style={styles.welcome}>Welcome, {user.username}!</Text>
-    //     <Text style={styles.welcome}>gender: {user.userGender}</Text>
-    //     <Text style={styles.welcome}>age: {user.userAge}</Text>
-    //     <Text style={styles.welcome}>height: {user.userHeight}</Text>
-    //     <Text style={styles.welcome}>weight: {user.userWeight}</Text>
-    //     <Text style={styles.welcome}>diet: {user.userDiet}</Text>
-    //   </ScrollView>
-    // </SafeAreaView>
     <UserProvider value={userData}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -126,7 +115,7 @@ const Home = ({ route }) => {
         <Tab.Screen name="Settings" component={SettingScreen} />
       </Tab.Navigator>
     </UserProvider>
-  );
+  );  
 };
 
 const styles = StyleSheet.create({

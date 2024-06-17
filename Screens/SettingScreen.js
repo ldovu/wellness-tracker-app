@@ -12,23 +12,34 @@ import {
   Alert,
   Image,
   Platform,
+  Dimensions,
+  KeyboardAvoidingView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useUser } from "./UserContext";
-import { getMeals, saveMeal } from "../Data";
+import { deleteLastUser, getUsers, getMeals, saveMeal } from "../Data";
 import * as ImagePicker from "expo-image-picker";
 import ActionSheet from "react-native-actionsheet";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import DatePicker from "../Components/DatePicker";
+import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import logoapp from "../Images/logoapp.png";
+
+// AIzaSyCplMxmKITQRTICaFtwSbemqES491_VMxA
 
 
 const SettingsScreen = () => {
   const userData = useUser();
-
   const [image, setImage] = useState("");
   const actionSheetRef = useRef();
-// Handle function for adding a photo:
+
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [searchText, setSearchText] = useState("");
+
+
+  // Handle function for adding a photo:
   //    it shows a dropdown menu and allow the user to pick an image from the gallery
   //    or take a photo with the camera
 
@@ -41,7 +52,20 @@ const SettingsScreen = () => {
     })();
   }, []);
 
-  
+  const handleGetUsers = async () => {
+    const users = await getUsers();
+    console.log("Users:", users);
+  };
+  // const handleRemoveUser = async () => {
+  //   console.log("Removing user");
+  //   const deleted = await deleteLastUser();
+  //   if (deleted) {
+  //     Alert.alert("User deleted successfully");
+  //   } else {
+  //     Alert.alert("Error deleting the user");
+  //   }
+  // };
+
   const handleActionSheet = (index) => {
     if (index === 0) {
       pickImage();
@@ -90,7 +114,7 @@ const SettingsScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text>Diet Screen</Text>
-        
+
         <View style={styles.container}>
           <TouchableOpacity
             onPress={() => actionSheetRef.current.show()}
@@ -107,7 +131,10 @@ const SettingsScreen = () => {
             </View>
           ) : null}
         </View>
+
         <Text>User Data: {userData.username}</Text>
+        <Button title="Get Users" onPress={handleGetUsers} />
+
         <ActionSheet
           ref={actionSheetRef}
           title={"Choose an option"}
@@ -115,7 +142,6 @@ const SettingsScreen = () => {
           cancelButtonIndex={2}
           onPress={(index) => handleActionSheet(index)}
         />
-        
       </ScrollView>
     </SafeAreaView>
   );
@@ -127,16 +153,14 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
     backgroundColor: "#f9f8eb",
   },
-
   image: {
     width: 100,
     height: 100,
   },
-
   buttonContainer: {
     marginBottom: 20,
+    backgroundColor: "#0b2b2f",
   },
-
   imageContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -152,9 +176,31 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
-  welcome: {
-    fontSize: 40,
-    marginBottom: 16,
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+  },
+  autocompleteContainer: {
+    flex: 1,
+    width: "100%",
+  },
+  textInputContainer: {
+    backgroundColor: "white",
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+  },
+  textInput: {
+    backgroundColor: "#ffffff",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    fontSize: 18,
+    height: 44,
+    elevation: 2,
+  },
+  listView: {
+    backgroundColor: "white",
   },
 });
 
