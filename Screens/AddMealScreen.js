@@ -21,6 +21,9 @@ import { saveMeal } from "../Data";
 import RNPickerSelect from "react-native-picker-select";
 import DatePicker from "../Components/DatePicker";
 import DietScreen from "./DietScreen";
+import ActionSheet from "react-native-actionsheet";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import * as ImagePicker from "expo-image-picker";
 
 const AddMealScreen = () => {
   const userData = useUser();
@@ -33,10 +36,29 @@ const AddMealScreen = () => {
   const [category, setCategory] = useState("");
   const [calories, setCalories] = useState("");
   const [mealDetails, setMealDetails] = useState("");
-
+  const [image, setImage] = useState({});
   const [error, setError] = useState("");
 
+  const actionSheetRef = useRef();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status: libraryStatus } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const { status: cameraStatus } =
+          await ImagePicker.requestCameraPermissionsAsync();
+
+        if (libraryStatus !== "granted" || cameraStatus !== "granted") {
+          Alert.alert(
+            "Permissions required",
+            "Sorry, we need camera and camera roll permissions to make this work!"
+          );
+        }
+      }
+    })();
+  }, []);
 
   const handleDateChange = (date) => {
     setDate(date);
@@ -59,18 +81,54 @@ const AddMealScreen = () => {
     setMealDetails(mealDetails);
   };
 
+  const handleImage = (uri) => {
+    setImage(uri);
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      handleImage(result.assets[0].uri);
+    }
+  };
+
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      handleImage(result.assets[0].uri);
+    }
+  };
+
+  const handleActionSheet = async (actionIndex) => {
+    if (actionIndex === 0) {
+      await pickImage();
+    } else if (actionIndex === 1) {
+      await takePhoto();
+    }
+  };
+
+  const showActionSheet = () => {
+    actionSheetRef.current.show();
+  };
+
   const handleAddMeal = async () => {
     if (!date || !category || !mealDetails) {
       setError("Fill main fields");
-      return; 
+      return;
     }
-
     setError("");
     stringDate = date.toDateString();
-    // console.log("Tipo date:", typeof date);   // object
-    // console.log("Date:", date);               // 2024-06-16T08:26:56.740Z
-    // console.log("Tipo string date:", typeof stringDate);  // string
-    // console.log("String date:", stringDate);   // Sun Jun 16 2024
 
     const meal = {
       userMeal,
@@ -78,6 +136,7 @@ const AddMealScreen = () => {
       category,
       calories,
       mealDetails,
+      image,
     };
     console.log("Meal:", meal);
     try {
@@ -100,65 +159,82 @@ const AddMealScreen = () => {
     >
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.content}>
-        <View style={styles.container}>
-          <Text style={styles.text}>Add Meal Screen</Text>
-          <View style={styles.row}>
-            <DatePicker onSelectDate={handleDateChange} />
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.textOptions}>Meal</Text>
-            <View style={styles.containerPicker}>
-              <RNPickerSelect
-                onValueChange={(value) => handleCategoryChange(value)}
-                items={[
-                  { label: "Breakfast", value: "Breakfast" },
-                  { label: "Lunch", value: "Lunch" },
-                  { label: "Dinner", value: "Dinner" },
-                  { label: "Snack", value: "Snack" },
-                ]}
-                style={pickerSelectStyles}
-                placeholder={{ label: "Select a type...", value: null }}
+          <View style={styles.container}>
+            <Text style={styles.text}>Add Meal Screen</Text>
+            <View style={styles.row}>
+              <DatePicker onSelectDate={handleDateChange} />
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.textOptions}>Meal</Text>
+              <View style={styles.containerPicker}>
+                <RNPickerSelect
+                  onValueChange={(value) => handleCategoryChange(value)}
+                  items={[
+                    { label: "Breakfast", value: "Breakfast" },
+                    { label: "Lunch", value: "Lunch" },
+                    { label: "Dinner", value: "Dinner" },
+                    { label: "Snack", value: "Snack" },
+                  ]}
+                  style={pickerSelectStyles}
+                  placeholder={{ label: "Select a type...", value: null }}
+                />
+              </View>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.textOptions}>Calories</Text>
+              <TextInput
+                style={styles.inputOptions}
+                placeholder="128"
+                value={calories}
+                onChangeText={handleCaloriesChange}
+                keyboardType="numeric"
               />
             </View>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.textOptions}>Calories</Text>
-            <TextInput
-              style={styles.inputOptions}
-              placeholder="128"
-              value={calories}
-              onChangeText={handleCaloriesChange}
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.textOptions}>Details</Text>
-          </View>
-          <View style={styles.row}>
-            <TextInput
-              editable
-              multiline
-              numberOfLines={4}
-              maxLength={40}
-              style={styles.inputBox}
-              placeholder="Avocado toast with eggs and a side of fruit."
-              autoCapitalize="none"
-              value={mealDetails}
-              onChangeText={handleMealDetailsChange}
-            />
-          </View>
+            <View style={styles.row}>
+              <Text style={styles.textOptions}>Details</Text>
+            </View>
+            <View style={styles.row}>
+              <TextInput
+                editable
+                multiline
+                numberOfLines={4}
+                maxLength={40}
+                style={styles.inputBox}
+                placeholder="Avocado toast with eggs and a side of fruit."
+                autoCapitalize="none"
+                value={mealDetails}
+                onChangeText={handleMealDetailsChange}
+              />
+            </View>
+            <View style={styles.row}>
+              <TouchableOpacity onPress={showActionSheet}>
+                <View style={styles.row}>
+                  <Text style={styles.addPicText}>Add a pic: </Text>
+                  <Icon name="add-a-photo" size={30} style={styles.iconPic} />
+                </View>
+              </TouchableOpacity>
+              {image && (
+                <View style={styles.row}>
+                  <Image source={{ uri: image }} style={styles.imagePreview} />
+                </View>
+              )}
+            </View>
 
-          <View style={styles.row}>
-            
-            <Pressable style={styles.button} onPress={handleAddMeal}>
-              <Text style={styles.buttonText}>Add</Text>
-            </Pressable>
-            
+            <View style={styles.row}>
+              <Pressable style={styles.button} onPress={handleAddMeal}>
+                <Text style={styles.buttonText}>Add</Text>
+              </Pressable>
+            </View>
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
           </View>
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
         </View>
-        </View>
+        <ActionSheet
+          ref={actionSheetRef}
+          title={"Choose an option"}
+          options={["Pick an image from camera roll", "Take a photo", "Cancel"]}
+          cancelButtonIndex={2}
+          onPress={(index) => handleActionSheet(index)}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -177,6 +253,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f9f8eb",
     marginBottom: 40,
+    marginTop: 40,
   },
   container: {
     flex: 1,
@@ -246,6 +323,24 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 10,
     fontSize: 20,
+  },
+
+  addPicText: {
+    fontSize: 20,
+    marginBottom: 10,
+    marginLeft: 200,
+    fontWeight: "bold",
+  },
+  iconPic: {
+    color: "#0b2b2f",
+    marginBottom: 10,
+  },
+  imagePreview: {
+    width: 80,
+    height: 80,
+    marginTop: 10,
+    borderRadius: 8,
+    marginRight: 80,
   },
 });
 

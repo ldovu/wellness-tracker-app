@@ -15,9 +15,9 @@ import { getUser } from "../Data";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { UserProvider } from "./UserContext";
+import { useUser, UserProvider } from "./UserContext";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
+import { MenuProvider } from "react-native-popup-menu";
 import TrainingScreen from "./TrainingScreen";
 import DietScreen from "./DietScreen";
 import SettingScreen from "./SettingScreen";
@@ -31,15 +31,31 @@ const Stack = createStackNavigator();
 
 const DietStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="DietScreen" component={DietScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="AddMeal" component={AddMealScreen} options={{ headerShown: false }} />
+    <Stack.Screen
+      name="DietScreen"
+      component={DietScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="AddMeal"
+      component={AddMealScreen}
+      options={{ headerShown: false }}
+    />
   </Stack.Navigator>
 );
 
 const TrainingStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="TrainingScreen" component={TrainingScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="AddTraining" component={AddTrainingScreen} options={{ headerShown: false }} />
+    <Stack.Screen
+      name="TrainingScreen"
+      component={TrainingScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="AddTraining"
+      component={AddTrainingScreen}
+      options={{ headerShown: false }}
+    />
   </Stack.Navigator>
 );
 
@@ -70,52 +86,54 @@ const Home = ({ route }) => {
 
   return (
     <UserProvider value={userData}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
-            let iconName;
+      <MenuProvider>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ color, size }) => {
+              let iconName;
 
-            if (route.name === "Diet       ") {
-              iconName = "restaurant-menu";
-            } else if (route.name === "Fitness ") {
-              iconName = "fitness-center";
-            } else if (route.name === "Settings") {
-              iconName = "settings";
-            }
+              if (route.name === "Diet       ") {
+                iconName = "restaurant-menu";
+              } else if (route.name === "Fitness ") {
+                iconName = "fitness-center";
+              } else if (route.name === "Settings") {
+                iconName = "settings";
+              }
 
-            return <Icon name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: "#0b2b2f",
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle: {
-            backgroundColor: "#edeac4",
-            height: 90,
-          },
-          headerStyle: {
-            backgroundColor: "#edeac4",
-            height: 110,
-          },
-          headerTintColor: "#0b2b2f",
-          headerTitle: (props) => (
-            <CustomHeader
-              title={props.children}
-              iconName="menu" // Example icon name
-              username={userData.username} // Pass username to CustomHeader
-            />
-          ),
-          headerTitleAlign: "left", // Align header title centrally
-          headerTitleStyle: {
-            fontSize: 24,
-            fontWeight: "bold",
-          },
-        })}
-      >
-        <Tab.Screen name="Diet       " component={DietStack} />
-        <Tab.Screen name="Fitness " component={TrainingStack} />
-        <Tab.Screen name="Settings" component={SettingScreen} />
-      </Tab.Navigator>
+              return <Icon name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: "#0b2b2f",
+            tabBarInactiveTintColor: "gray",
+            tabBarStyle: {
+              backgroundColor: "#edeac4",
+              height: 90,
+            },
+            headerStyle: {
+              backgroundColor: "#edeac4",
+              height: 110,
+            },
+            headerTintColor: "#0b2b2f",
+            headerTitle: (props) => (
+              <CustomHeader
+                title={props.children}
+                iconName="menu" // Example icon name
+                username={userData.username} // Pass username to CustomHeader
+              />
+            ),
+            headerTitleAlign: "left", // Align header title centrally
+            headerTitleStyle: {
+              fontSize: 24,
+              fontWeight: "bold",
+            },
+          })}
+        >
+          <Tab.Screen name="Diet       " component={DietStack} />
+          <Tab.Screen name="Fitness " component={TrainingStack} />
+          <Tab.Screen name="Settings" component={SettingScreen} />
+        </Tab.Navigator>
+      </MenuProvider>
     </UserProvider>
-  );  
+  );
 };
 
 const styles = StyleSheet.create({

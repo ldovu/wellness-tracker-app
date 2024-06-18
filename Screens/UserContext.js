@@ -1,18 +1,21 @@
 // This file is used for providing a context for passing the user data 
 // from Tab Navigator to Tab Screens (TrainingScreen, DietScreen, SettingScreen)
 
+import React, { createContext, useContext, useState } from 'react';
 
-import React, { createContext, useContext } from 'react';
-
-
+// Create the UserContext
 const UserContext = createContext();
 
+// UserProvider component to provide the context value
 export const UserProvider = ({ children, value }) => {
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  const [username, setUsername] = useState(value.username || '');
+
+  return (
+    <UserContext.Provider value={{ username, setUsername }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
-export const useUser = () => {
-  return useContext(UserContext);
-};
-
-
+// Custom hook to use the UserContext
+export const useUser = () => useContext(UserContext);

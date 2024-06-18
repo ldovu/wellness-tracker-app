@@ -12,7 +12,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 // import { registerRootComponent } from 'expo';  // Import registerRootComponent  
-
+import { MenuProvider } from 'react-native-popup-menu';
 // Screens
 import SplashScreen from "./Screens/SplashScreen";
 import Login from "./Screens/Login";

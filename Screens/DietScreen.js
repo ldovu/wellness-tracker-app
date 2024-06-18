@@ -12,16 +12,24 @@ import {
   Alert,
   Image,
   Platform,
+  Dimensions,
+  Pressable,
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   useRoute,
   useNavigation,
   useFocusEffect,
 } from "@react-navigation/native";
 import { useUser } from "./UserContext";
-import { getMeals } from "../Data";
+import { getMeals, fetchImages, saveImage, removeImage } from "../Data";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ActionSheet from "react-native-actionsheet";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const categoryOrder = {
   Breakfast: 1,
@@ -34,16 +42,10 @@ const DietScreen = () => {
   const navigation = useNavigation();
   const userData = useUser();
   const [meals, setMeals] = useState([]);
-  const actionSheetRef = useRef();
-
+  const { username } = useUser();
   const handleAddMealPress = () => {
     navigation.navigate("AddMeal");
   };
-
-  // Hook: first parameter -> function that represents the "effect"
-  //       second parameter -> optional array of dependencies:
-  //                          - react rerun the effect only when dependencies has changed
-  //                          - if dependencies array is omitted, the effects runs after every render
 
   const fetchMeals = async () => {
     try {
@@ -62,11 +64,12 @@ const DietScreen = () => {
       setMeals([]);
     }
   };
+
   //
   useFocusEffect(
     useCallback(() => {
       fetchMeals();
-    }, [userData.username])
+    }, [username])
   );
 
   const renderMeals = () => {
@@ -105,6 +108,9 @@ const DietScreen = () => {
                 <Text style={styles.mealText}>{meal.mealDetails}</Text>
                 <Text style={styles.mealText}>{meal.calories} kcal</Text>
               </View>
+              {meal.image && (
+                <Image source={{ uri: meal.image }} style={styles.mealImage} />
+              )}
             </View>
           ))}
         </View>
@@ -165,7 +171,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
   },
-
+  addButton: {
+    marginLeft: 10,
+  },
   buttonContainer: {
     marginBottom: 20,
   },
@@ -176,8 +184,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
+  mealImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 3,
+    marginRight: 4,
+  },
+
   // --------------------------------
 
+  textAddImage: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#007BFF",
+  },
+  addImageText: {
+    color: "#007BFF",
+    marginTop: 8,
+  },
+  removeImageText: {
+    color: "#FF0000",
+    marginTop: 8,
+  },
   mealGroup: {
     marginBottom: 20,
   },

@@ -13,12 +13,24 @@ import {
   Image,
   Platform,
   Dimensions,
+  Pressable,
+  FlatList,
   KeyboardAvoidingView,
+  Modal,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useUser } from "./UserContext";
-import { deleteLastUser, getUsers, getMeals, saveMeal } from "../Data";
+import {
+  deleteLastUser,
+  getUsers,
+  getMeals,
+  saveMeal,
+  deleteTraining,
+  fetchImages,
+  saveImage,
+  removeImage,
+} from "../Data";
 import * as ImagePicker from "expo-image-picker";
 import ActionSheet from "react-native-actionsheet";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -26,31 +38,35 @@ import DatePicker from "../Components/DatePicker";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import logoapp from "../Images/logoapp.png";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
+// import { Ionicons as Icon } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
 
 // AIzaSyCplMxmKITQRTICaFtwSbemqES491_VMxA
 
-
 const SettingsScreen = () => {
   const userData = useUser();
-  const [image, setImage] = useState("");
-  const actionSheetRef = useRef();
-
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [searchText, setSearchText] = useState("");
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
 
   // Handle function for adding a photo:
   //    it shows a dropdown menu and allow the user to pick an image from the gallery
   //    or take a photo with the camera
-
-  useEffect(() => {
-    (async () => {
-      const { status: cameraStatus } =
-        await ImagePicker.requestCameraPermissionsAsync();
-      const { status: mediaLibraryStatus } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-    })();
-  }, []);
+  
+  const handleLogout = async () => {
+    await logoutUser();
+    navigation.reset({
+      index: 0,
+      actions: [navigation.navigate("Login")],
+    });
+    console.log("User logged out");
+    setModalVisible(false);
+  };
 
   const handleGetUsers = async () => {
     const users = await getUsers();
@@ -66,82 +82,63 @@ const SettingsScreen = () => {
   //   }
   // };
 
-  const handleActionSheet = (index) => {
-    if (index === 0) {
-      pickImage();
-    } else if (index === 1) {
-      takePhoto();
-    }
-  };
+  // const handleRemoveTraining = async () => {
+  //   console.log("Removing training");
+  //   const deleted = await deleteTraining();
+  //   if (deleted) {
+  //     Alert.alert("User deleted successfully");
+  //   } else {
+  //     Alert.alert("Error deleting the user");
+  //   }
+  // };
 
-  // Function for picking an image from the gallery
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  // Function for taking a photo with the camera
-  const takePhoto = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  // Function for removing the uploaded image image
-  const removeImage = () => {
-    setImage("");
-  };
   console.log("User data in Diet:", userData);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text>Diet Screen</Text>
 
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => actionSheetRef.current.show()}
-            style={styles.iconButton}
-          >
-            <Icon name="add-a-photo" size={30} color="#0b2b2f" />
-          </TouchableOpacity>
-          {image ? (
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: image }} style={styles.image} />
-              <TouchableOpacity onPress={removeImage}>
-                <Icon name="delete" size={30} color="red" />
-              </TouchableOpacity>
-            </View>
-          ) : null}
-        </View>
-
         <Text>User Data: {userData.username}</Text>
         <Button title="Get Users" onPress={handleGetUsers} />
+        <Icon name="add-a-photo" size={30} color="#0b2b2f" />
 
-        <ActionSheet
-          ref={actionSheetRef}
-          title={"Choose an option"}
-          options={["Pick an image from camera roll", "Take a photo", "Cancel"]}
-          cancelButtonIndex={2}
-          onPress={(index) => handleActionSheet(index)}
-        />
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>Are you sure to logout?</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={handleLogout}
+                  >
+                    <Text style={styles.textStyle}>Yes</Text>
+                  </Pressable>
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setModalVisible(!modalVisible)}
+                  >
+                    <Text style={styles.textStyle}>No</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          </Modal>
+          <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.textStyle}>Show Modal</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -201,6 +198,48 @@ const styles = StyleSheet.create({
   },
   listView: {
     backgroundColor: "white",
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 
