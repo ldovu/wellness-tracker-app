@@ -65,6 +65,29 @@ export const getUsers = async () => {
   }
 };
 
+export const deleteAllUsersExceptFirst = async () => {
+  try {
+    const users = await getUsers();
+
+    if (users.length > 0) {
+      const firstUser = users[0];
+
+      // Delete all users
+      const keys = await AsyncStorage.getAllKeys();
+      const userKeys = keys.filter((key) => key.endsWith(Users_KEY));
+      await AsyncStorage.multiRemove(userKeys);
+
+      // Save only the first user back to storage
+      // await saveUser(firstUser.username, firstUser);
+
+      console.log("All users except the first one have been deleted.");
+    } else {
+      console.log("No users found to delete.");
+    }
+  } catch (error) {
+    console.error("Error deleting users:", error);
+  }
+};
 // Save a single user by username
 export const saveUser = async (username, user) => {
   try {

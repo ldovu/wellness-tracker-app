@@ -26,7 +26,9 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
 
 const AddMealScreen = () => {
-  const userData = useUser();
+  // verifica userdata format
+  const {userData} = useUser();
+
 
   // The user associated with the meal is the logged in user
   const userMeal = userData.username;

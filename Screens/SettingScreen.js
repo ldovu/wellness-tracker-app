@@ -24,6 +24,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { useUser } from "./UserContext";
 import {
   deleteLastUser,
+  deleteAllUsersExceptFirst,
   getUsers,
   getMeals,
   saveMeal,
@@ -63,7 +64,7 @@ const SettingsScreen = () => {
 
   console.log("User data in settings:", userData);
   // console.log("Username in settings:", username);
-
+ 
   const handleLogout = async () => {
     await logoutUser();
     navigation.reset({
@@ -88,6 +89,18 @@ const SettingsScreen = () => {
   //   }
   // };
 
+  // const deleteUsers = async () => {
+  //   console.log("Removing all users");
+  //   const deleted = await deleteAllUsersExceptFirst();
+  //   if (deleted) {
+  //     Alert.alert("Users deleted successfully");
+  //   } else {
+  //     Alert.alert("Error deleting the users");
+  //   }
+  //   handleGetUsers();
+  // };
+  
+
   // const handleRemoveTraining = async () => {
   //   console.log("Removing training");
   //   const deleted = await deleteTraining();
@@ -102,6 +115,7 @@ const SettingsScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          {/* <Button title="Get users" onPress={handleGetUsers} /> */}
 
           <Text style={styles.text}>User Profile</Text>
           <View style={styles.listUserOptions}>
