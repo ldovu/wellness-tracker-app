@@ -23,7 +23,7 @@ import DatePicker from "../Components/DatePicker";
 import TrainingScreen from "./TrainingScreen";
 
 const AddTrainingScreen = () => {
-  const userData = useUser();
+  const { userData } = useUser();
 
   // The user associated with the training is the logged in user
   const userTraining = userData.username;
@@ -33,14 +33,11 @@ const AddTrainingScreen = () => {
   const [sport, setSport] = useState("");
   const [selectedHour, setSelectedHour] = useState(null);
   const [selectedMinute, setSelectedMinute] = useState(null);
-
   const [burntCalories, setBurntCalories] = useState("");
   const [description, setDescription] = useState("");
-
   const [error, setError] = useState("");
 
-  const [selectedTime, setSelectedTime] = useState(null);
-
+  // Setting the possible variables for hours and minutes
   const hours = Array.from({ length: 24 }, (_, i) => ({
     label: `${i}`,
     value: i,
@@ -67,6 +64,9 @@ const AddTrainingScreen = () => {
     setSelectedMinute(minutes);
   };
 
+  console.log("Selected hour:", selectedHour);
+  console.log("Selected minute:", selectedMinute);
+
   const handleBurntCaloriesChange = (calories) => {
     const cleanedCalories = calories.replace(/[^0-9]/g, "");
     const parsedValue = parseInt(cleanedCalories, 10);
@@ -85,8 +85,8 @@ const AddTrainingScreen = () => {
     if (
       !date ||
       !sport ||
-      !hours ||
-      !minutes ||
+      selectedHour === null ||
+      selectedMinute === null ||
       !burntCalories ||
       !description
     ) {
@@ -95,19 +95,21 @@ const AddTrainingScreen = () => {
     }
 
     setError("");
-    const duration = `${hours}h ${minutes}m`;
+    // const duration = `${hours}h ${minutes}m`;
     const stringDate = date.toDateString();
     const training = {
       userTraining,
       stringDate,
       sport,
-      duration,
+      hours: selectedHour,
+      minutes: selectedMinute,
       burntCalories,
       description,
     };
     console.log("Training:", training);
     try {
       // Server function for storing training with AsyncStorage
+      console.log("Saving", training);
       await saveTraining(training);
       console.log("Training saved", training);
 
@@ -119,14 +121,6 @@ const AddTrainingScreen = () => {
     }
   };
 
-  const generatePickerItems = (max) => {
-    const items = [];
-    for (let i = 0; i <= max; i++) {
-      items.push({ label: i.toString(), value: i.toString() });
-    }
-    return items;
-  };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -135,7 +129,7 @@ const AddTrainingScreen = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.content}>
           <View style={styles.container}>
-            <Text style={styles.text}>Add Training Screen</Text>
+            <Text style={styles.text}>Add a Training</Text>
             <View style={styles.row}>
               <DatePicker onSelectDate={handleDateChange} />
             </View>
@@ -165,20 +159,7 @@ const AddTrainingScreen = () => {
             </View>
             <View style={styles.row}>
               <Text style={styles.textOptions}>Duration</Text>
-              {/* <View style={styles.durationContainer}>
-                <RNPickerSelect
-                  onValueChange={handleMinutesChange}
-                  items={hours}
-                  placeholder={{ label: "hrs", value: null }}
-                  style={pickerHrsMin}
-                />
-                <RNPickerSelect
-                  onValueChange={handleHoursChange}
-                  items={minutes}
-                  placeholder={{ label: "min", value: null }}
-                  style={pickerHrsMin}
-                />
-              </View> */}
+
               <View style={styles.durationContainer}>
                 <RNPickerSelect
                   onValueChange={handleHoursChange}
@@ -186,7 +167,9 @@ const AddTrainingScreen = () => {
                   placeholder={{ label: "hrs...", value: null }}
                   style={pickerHrsMin}
                 />
+
                 <View style={styles.spaceBetween} />
+
                 <RNPickerSelect
                   onValueChange={handleMinutesChange}
                   items={minutes}
@@ -279,8 +262,6 @@ const styles = StyleSheet.create({
   containerPicker: {
     width: "40%",
     marginRight: 40,
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
   textOptions: {
     flex: 1,
@@ -321,14 +302,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 20,
   },
+
   durationContainer: {
     flexDirection: "row",
-    justifyContent: "center",
     marginRight: 40,
-    alignItems: "center",
   },
   spaceBetween: {
-    width: 10, // You can adjust this width to add more or less space
+    width: 10,
   },
 });
 
@@ -341,9 +321,9 @@ const pickerSelectStyles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     marginBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
-
+    // paddingLeft: 10,
+    // paddingRight: 10,
+    textAlign: "center",
     color: "#f9f8eb",
     fontSize: 18,
     fontWeight: "bold",
@@ -357,8 +337,8 @@ const pickerSelectStyles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     marginBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
+    // paddingLeft: 10,
+    // paddingRight: 10,
     color: "#f9f8eb",
     fontSize: 18,
     fontWeight: "bold",
@@ -367,12 +347,13 @@ const pickerSelectStyles = StyleSheet.create({
   placeholder: {
     color: "#f9f8eb",
     fontFamily: "YourCustomFont",
+    justifyContent: "center",
   },
 });
 
 const pickerHrsMin = StyleSheet.create({
   inputIOS: {
-    width: "100%",
+    width: 70,
     height: 40,
     backgroundColor: "#0b2b2f",
     justifyContent: "center",
@@ -381,7 +362,7 @@ const pickerHrsMin = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 10,
     paddingRight: 10,
-
+    textAlign: "center",
     color: "#f9f8eb",
     fontSize: 18,
     fontWeight: "bold",
@@ -397,6 +378,8 @@ const pickerHrsMin = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 10,
     paddingRight: 10,
+    textAlign: "center",
+
     color: "#f9f8eb",
     fontSize: 18,
     fontWeight: "bold",

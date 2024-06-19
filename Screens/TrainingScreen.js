@@ -25,13 +25,15 @@ import ActionSheet from "react-native-actionsheet";
 
 const TrainingScreen = () => {
   const navigation = useNavigation();
-  const userData = useUser();
+  const { userData } = useUser();
   const [trainings, setTrainings] = useState([]);
-  const actionSheetRef = useRef();
 
   const handleAddTrainingPress = () => {
     navigation.navigate("AddTraining");
   };
+
+  // console.log("User data in Training:", userData.userData);
+  console.log("U:", userData);
 
   const fetchTrainings = async () => {
     try {
@@ -40,7 +42,7 @@ const TrainingScreen = () => {
         const userTrainings = storedTrainings.filter(
           (training) => training.userTraining === userData.username
         );
-        console.log("User trainings:", userTrainings);
+        // console.log("User trainings:", userTrainings);
         setTrainings(userTrainings);
       } else {
         setTrainings([]);
@@ -50,6 +52,7 @@ const TrainingScreen = () => {
     }
   };
 
+  // Each time the focus is one the screen the view is updated
   useFocusEffect(
     useCallback(() => {
       fetchTrainings();
@@ -79,9 +82,11 @@ const TrainingScreen = () => {
             <View key={index} style={styles.trainingItem}>
               <View style={styles.trainingDetails}>
                 <Text style={styles.trainingSports}>{training.sport}</Text>
-                <Text style={styles.trainingText}>{training.duration}</Text>
                 <Text style={styles.trainingText}>
-                  {training.burntCalories}
+                  {training.hours}:{training.minutes}:00
+                </Text>
+                <Text style={styles.trainingText}>
+                  {training.burntCalories} kcal
                 </Text>
                 <Text style={styles.trainingText}>{training.description}</Text>
               </View>
@@ -92,7 +97,6 @@ const TrainingScreen = () => {
     });
   };
 
-  console.log("User data in Training:", userData);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>

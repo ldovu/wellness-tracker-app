@@ -3,15 +3,31 @@
 
 import React, { createContext, useContext, useState } from 'react';
 
-// Create the UserContext
+// // Create the UserContext
+// const UserContext = createContext();
+
+// // UserProvider component to provide the context value
+// export const UserProvider = ({ children, value }) => {
+//   const [username, setUsername] = useState(value.username || '');
+
+//   return (
+//     <UserContext.Provider value={{ username, setUsername }}>
+//       {children}
+//     </UserContext.Provider>
+//   );
+// };
+
+// // Custom hook to use the UserContext
+// export const useUser = () => useContext(UserContext);
+
 const UserContext = createContext();
 
 // UserProvider component to provide the context value
 export const UserProvider = ({ children, value }) => {
-  const [username, setUsername] = useState(value.username || '');
+  const [userData, setUserData] = useState(value || {});
 
   return (
-    <UserContext.Provider value={{ username, setUsername }}>
+    <UserContext.Provider value={{ userData, setUserData }}>
       {children}
     </UserContext.Provider>
   );
@@ -19,3 +35,4 @@ export const UserProvider = ({ children, value }) => {
 
 // Custom hook to use the UserContext
 export const useUser = () => useContext(UserContext);
+

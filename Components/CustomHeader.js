@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Button,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
 import { logoutUser } from "../Data";
 import {
   Menu,
@@ -34,40 +28,12 @@ const CustomHeader = ({ title, username }) => {
     <View style={styles.header}>
       <Text style={styles.title}>{title}</Text>
       <View style={styles.avatarContainer}>
-        <Menu>
-          <MenuTrigger>
-            <TouchableOpacity style={styles.avatar}>
-              <Text style={styles.avatarText}>
-                {username.charAt(0).toUpperCase()}
-              </Text>
-            </TouchableOpacity>
-          </MenuTrigger>
-          <MenuOptions>
-            <MenuOption onSelect={() => setModalVisible(true)}>
-              <Text style={styles.menuOption}>Logout</Text>
-            </MenuOption>
-          </MenuOptions>
-        </Menu>
-      </View>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              Are you sure you want to logout?
-            </Text>
-            <Button title="Yes" onPress={handleLogout} />
-            <Button title="No" onPress={() => setModalVisible(!modalVisible)} />
-          </View>
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>
+            {username.charAt(0).toUpperCase()}
+          </Text>
         </View>
-      </Modal>
+      </View>
     </View>
   );
 };
@@ -111,25 +77,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  modalView: {
-    width: "80%",
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
+  
+
 });
 
 export default CustomHeader;

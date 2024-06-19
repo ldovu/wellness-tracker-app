@@ -40,9 +40,10 @@ const categoryOrder = {
 
 const DietScreen = () => {
   const navigation = useNavigation();
-  const userData = useUser();
   const [meals, setMeals] = useState([]);
-  const { username } = useUser();
+
+  const { userData } = useUser();
+  
   const handleAddMealPress = () => {
     navigation.navigate("AddMeal");
   };
@@ -69,7 +70,7 @@ const DietScreen = () => {
   useFocusEffect(
     useCallback(() => {
       fetchMeals();
-    }, [username])
+    }, [userData.username])
   );
 
   const renderMeals = () => {
