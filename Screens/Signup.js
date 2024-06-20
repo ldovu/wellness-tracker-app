@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 100,
     backgroundColor: "#f9f8eb",
-    marginBottom: 40,
+    marginBottom: 80,
   },
   logo: {
     width: 100,

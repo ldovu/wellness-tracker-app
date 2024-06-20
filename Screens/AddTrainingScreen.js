@@ -17,9 +17,14 @@ import {
 } from "react-native";
 import { useUser } from "./UserContext";
 import { useNavigation } from "@react-navigation/native";
-import { saveTraining } from "../Data";
+import { saveMeal, saveTraining,  } from "../Data";
 import RNPickerSelect from "react-native-picker-select";
 import DatePicker from "../Components/DatePicker";
+import DietScreen from "./DietScreen";
+import ActionSheet from "react-native-actionsheet";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import * as ImagePicker from "expo-image-picker";
+
 import TrainingScreen from "./TrainingScreen";
 
 const AddTrainingScreen = () => {
@@ -35,7 +40,29 @@ const AddTrainingScreen = () => {
   const [selectedMinute, setSelectedMinute] = useState(null);
   const [burntCalories, setBurntCalories] = useState("");
   const [description, setDescription] = useState("");
+  const [image, setImage] = useState({});
   const [error, setError] = useState("");
+
+  const actionSheetRef = useRef();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status: libraryStatus } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const { status: cameraStatus } =
+          await ImagePicker.requestCameraPermissionsAsync();
+
+        if (libraryStatus !== "granted" || cameraStatus !== "granted") {
+          Alert.alert(
+            "Permissions required",
+            "Sorry, we need camera and camera roll permissions to make this work!"
+          );
+        }
+      }
+    })();
+  }, []);
 
   // Setting the possible variables for hours and minutes
   const hours = Array.from({ length: 24 }, (_, i) => ({
@@ -46,8 +73,6 @@ const AddTrainingScreen = () => {
     label: `${i}`,
     value: i,
   }));
-
-  const navigation = useNavigation();
 
   const handleDateChange = (date) => {
     setDate(date);
@@ -81,6 +106,47 @@ const AddTrainingScreen = () => {
     setDescription(description);
   };
 
+  const handleImage = (uri) => {
+    setImage(uri);
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      handleImage(result.assets[0].uri);
+    }
+  };
+
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      handleImage(result.assets[0].uri);
+    }
+  };
+
+  const handleActionSheet = async (actionIndex) => {
+    if (actionIndex === 0) {
+      await pickImage();
+    } else if (actionIndex === 1) {
+      await takePhoto();
+    }
+  };
+
+  const showActionSheet = () => {
+    actionSheetRef.current.show();
+  };
+
   const handleAddTraining = async () => {
     if (
       !date ||
@@ -105,6 +171,7 @@ const AddTrainingScreen = () => {
       minutes: selectedMinute,
       burntCalories,
       description,
+      image,
     };
     console.log("Training:", training);
     try {
@@ -205,6 +272,19 @@ const AddTrainingScreen = () => {
                 onChangeText={handleDescriptionChange}
               />
             </View>
+            <View style={styles.row}>
+              <TouchableOpacity onPress={showActionSheet}>
+                <View style={styles.row}>
+                  <Text style={styles.addPicText}>Add a pic: </Text>
+                  <Icon name="add-a-photo" size={30} style={styles.iconPic} />
+                </View>
+              </TouchableOpacity>
+              {image && (
+                <View style={styles.row}>
+                  <Image source={{ uri: image }} style={styles.imagePreview} />
+                </View>
+              )}
+            </View>
 
             <View style={styles.row}>
               <Pressable style={styles.button} onPress={handleAddTraining}>
@@ -214,6 +294,13 @@ const AddTrainingScreen = () => {
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
           </View>
         </View>
+        <ActionSheet
+          ref={actionSheetRef}
+          title={"Choose an option"}
+          options={["Pick an image from camera roll", "Take a photo", "Cancel"]}
+          cancelButtonIndex={2}
+          onPress={(index) => handleActionSheet(index)}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -231,7 +318,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: "#f9f8eb",
-    marginBottom: 40,
+    marginBottom: 30,
+    marginTop: 30,
   },
   container: {
     flex: 1,
@@ -309,6 +397,23 @@ const styles = StyleSheet.create({
   },
   spaceBetween: {
     width: 10,
+  },
+  addPicText: {
+    fontSize: 20,
+    marginBottom: 10,
+    marginLeft: 200,
+    fontWeight: "bold",
+  },
+  iconPic: {
+    color: "#0b2b2f",
+    marginBottom: 10,
+  },
+  imagePreview: {
+    width: 80,
+    height: 80,
+    marginTop: 10,
+    borderRadius: 4,
+    marginRight: 160,
   },
 });
 

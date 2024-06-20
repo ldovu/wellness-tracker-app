@@ -21,6 +21,8 @@ import {
 } from "@react-navigation/native";
 import { useUser } from "./UserContext";
 import { getTrainings } from "../Data";
+import * as ImagePicker from "expo-image-picker";
+
 import ActionSheet from "react-native-actionsheet";
 
 const TrainingScreen = () => {
@@ -90,6 +92,12 @@ const TrainingScreen = () => {
                 </Text>
                 <Text style={styles.trainingText}>{training.description}</Text>
               </View>
+              {training.image && (
+                <Image
+                  source={{ uri: training.image }}
+                  style={styles.trainingImage}
+                />
+              )}
             </View>
           ))}
         </View>
@@ -194,6 +202,12 @@ const styles = StyleSheet.create({
   },
   trainingText: {
     fontSize: 16,
+  },
+  trainingImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 3,
+    marginRight: 4,
   },
 });
 

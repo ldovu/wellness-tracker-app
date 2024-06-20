@@ -27,8 +27,7 @@ import * as ImagePicker from "expo-image-picker";
 
 const AddMealScreen = () => {
   // verifica userdata format
-  const {userData} = useUser();
-
+  const { userData } = useUser();
 
   // The user associated with the meal is the logged in user
   const userMeal = userData.username;
@@ -254,8 +253,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: "#f9f8eb",
-    marginBottom: 40,
-    marginTop: 40,
+    marginBottom: 20,
+    marginTop: -20,
   },
   container: {
     flex: 1,
@@ -341,8 +340,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     marginTop: 10,
-    borderRadius: 8,
-    marginRight: 80,
+    borderRadius: 4,
+    marginRight: 160,
   },
 });
 

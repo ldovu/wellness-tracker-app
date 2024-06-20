@@ -17,8 +17,6 @@ import { MenuProvider } from 'react-native-popup-menu';
 import SplashScreen from "./Screens/SplashScreen";
 import Login from "./Screens/Login";
 import Signup from "./Screens/Signup";
-import LeftDrawer from "./Components/LeftDrawer";
-import Heading from "./Components/Heading";
 import Home from "./Screens/Home";
 
 

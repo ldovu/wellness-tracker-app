@@ -16,13 +16,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { getUser } from "../Data";
 import Home from "./Home";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [error, setError] = useState("");
 
   const navigation = useNavigation();
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   const handleLogin = async () => {
     if (!username) {
@@ -73,13 +79,24 @@ const LoginScreen = () => {
                 value={username}
                 onChangeText={setUsername}
               />
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
-              />
+
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.inputPassword}
+                  placeholder="Password"
+                  secureTextEntry={!isPasswordVisible}
+                  value={password}
+                  onChangeText={setPassword}
+                />
+                <TouchableOpacity onPress={togglePasswordVisibility}>
+                  <Icon
+                    name={isPasswordVisible ? "eye" : "eye-off"}
+                    size={24}
+                    color="gray"
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
 
               <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Login</Text>
@@ -175,6 +192,25 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 10,
     fontSize: 20,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    height: 55,
+  },
+
+  inputPassword: {
+    flex: 1,
+    fontSize: 20,
+  },
+  icon: {
+    marginRight: 10,
   },
 });
 

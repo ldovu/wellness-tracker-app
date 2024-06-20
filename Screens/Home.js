@@ -17,14 +17,18 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useUser, UserProvider } from "./UserContext";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MenuProvider } from "react-native-popup-menu";
 import TrainingScreen from "./TrainingScreen";
 import DietScreen from "./DietScreen";
-import SettingScreen from "./SettingScreen";
+import UserProfileScreen from "./UserProfileScreen";
+import SettingScreen from "./UserProfileScreen";
 import SplashScreen from "./SplashScreen";
 import CustomHeader from "../Components/CustomHeader";
 import AddMealScreen from "./AddMealScreen";
 import AddTrainingScreen from "./AddTrainingScreen";
+import EditUserScreen from "./EditUserScreen";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -54,6 +58,22 @@ const TrainingStack = () => (
     <Stack.Screen
       name="AddTraining"
       component={AddTrainingScreen}
+      options={{ headerShown: false }}
+    />
+  </Stack.Navigator>
+);
+
+
+const UserProfileStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="UserProfileScreen"
+      component={UserProfileScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="EditUserScreen"
+      component={EditUserScreen}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>
@@ -96,8 +116,8 @@ const Home = ({ route }) => {
                 iconName = "restaurant-menu";
               } else if (route.name === "Fitness ") {
                 iconName = "fitness-center";
-              } else if (route.name === "Settings") {
-                iconName = "settings";
+              } else if (route.name === "Profile  ") {
+                iconName = "person";
               }
 
               return <Icon name={iconName} size={size} color={color} />;
@@ -129,7 +149,7 @@ const Home = ({ route }) => {
         >
           <Tab.Screen name="Diet       " component={DietStack} />
           <Tab.Screen name="Fitness " component={TrainingStack} />
-          <Tab.Screen name="Settings" component={SettingScreen} />
+          <Tab.Screen name="Profile  " component={UserProfileStack} />
         </Tab.Navigator>
       </MenuProvider>
     </UserProvider>
