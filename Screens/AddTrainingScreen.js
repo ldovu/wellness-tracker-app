@@ -273,7 +273,7 @@ const AddTrainingScreen = () => {
                 editable
                 multiline
                 numberOfLines={4}
-                maxLength={40}
+                maxLength={100}
                 style={styles.inputBox}
                 placeholder="Cardio workout and leg day: squats, leg press, leg curls"
                 autoCapitalize="none"

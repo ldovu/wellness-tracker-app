@@ -12,7 +12,7 @@ const DatePicker = ({ onSelectDate }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   // Handle date change event and update the state of selectedDate
-  const onChange = (selectedDate) => {
+  const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || selectedDate;
     setSelectedDate(currentDate);
     onSelectDate(currentDate); // Callback to parent component with selected date

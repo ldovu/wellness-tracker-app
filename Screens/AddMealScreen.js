@@ -214,7 +214,7 @@ const AddMealScreen = () => {
                 editable
                 multiline
                 numberOfLines={4}
-                maxLength={40}
+                maxLength={100}
                 style={styles.inputBox}
                 placeholder="Avocado toast with eggs and a side of fruit."
                 autoCapitalize="none"

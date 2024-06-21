@@ -8,11 +8,10 @@ import {
   ScrollView,
   StatusBar,
   Modal,
-  Button,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useUser } from "./UserContext";
-import { getUser, getUsers, logoutUser } from "../Data";
+import { getUser, logoutUser } from "../Data";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 /**
@@ -53,15 +52,6 @@ const UserProfileScreen = () => {
       setModalVisible(false);
     } catch (error) {
       console.log("Error logging out", error);
-    }
-  };
-
-  const handleGetUsers = async () => {
-    try {
-      const users = await getUsers();
-      console.log("Users:", users);
-    } catch (error) {
-      console.log("Error getting users", error);
     }
   };
 
@@ -133,10 +123,6 @@ const UserProfileScreen = () => {
               {`\u25AA `} Weight: {userData.userWeight} kg
             </Text>
           </View>
-
-          {/* TODO: delete button */}
-          <Button name="getUsers" onPress={handleGetUsers} title="Get Users" /> 
-
         </ScrollView>
         <TouchableOpacity
           style={styles.button}
