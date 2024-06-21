@@ -1,11 +1,16 @@
 import React, { useEffect } from "react";
 import { View, Image, StyleSheet } from "react-native";
 
+/**
+ * SplashScreen models the screen that appears when the app is launched.
+ * It displays the app's logo and navigates to the Login screen after 0.5 seconds.
+ */
+
 export default function SplashScreen({ navigation }) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace("Login"); // navigate to "Auth" instead of "Login"
-    }, 500); // 2000= after 2 seconds
+      navigation.replace("Login");
+    }, 500);
 
     return () => clearTimeout(timer); // clear timer
   }, [navigation]);
@@ -17,6 +22,7 @@ export default function SplashScreen({ navigation }) {
   );
 }
 
+// Styles for the SplashScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,

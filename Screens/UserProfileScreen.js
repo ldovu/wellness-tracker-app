@@ -1,55 +1,27 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  Button,
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
   StatusBar,
-  Alert,
-  Image,
-  Platform,
-  Dimensions,
-  Pressable,
-  FlatList,
-  KeyboardAvoidingView,
   Modal,
-  SectionList,
+  Button,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  useRoute,
-  useNavigation,
-  useFocusEffect,
-} from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useUser } from "./UserContext";
-import {
-  deleteLastUser,
-  deleteAllUsersExceptFirst,
-  getUsers,
-  getMeals,
-  saveMeal,
-  getUser,
-  logoutUser,
-} from "../Data";
-import * as ImagePicker from "expo-image-picker";
-import ActionSheet from "react-native-actionsheet";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { getUser, getUsers, logoutUser } from "../Data";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import DatePicker from "../Components/DatePicker";
-import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import logoapp from "../Images/logoapp.png";
-import {
-  Menu,
-  MenuTrigger,
-  MenuOptions,
-  MenuOption,
-} from "react-native-popup-menu";
 
+/**
+ * UserProfileScreen models the screen for displaying the user's profile details.
+ * The user can see the details of his/her profile and click on the icon to edit them.
+ * The username and password are shown but cannot be modified.
+ * The password can be visible if the user clicks on it.
+ * The user can logout by pressing the button "Logout": a modal will appear to confirm the action.
+ */
 const UserProfileScreen = () => {
   const { userData, setUserData } = useUser();
   const [localUserData, setLocalUserData] = useState(userData);
@@ -69,6 +41,7 @@ const UserProfileScreen = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
+  // Handle logout function
   const handleLogout = async () => {
     try {
       await logoutUser();
@@ -83,11 +56,16 @@ const UserProfileScreen = () => {
     }
   };
 
-  // const handleGetUsers = async () => {
-  //   const users = await getUsers();
-  //   console.log("Users:", users);
-  // };
+  const handleGetUsers = async () => {
+    try {
+      const users = await getUsers();
+      console.log("Users:", users);
+    } catch (error) {
+      console.log("Error getting users", error);
+    }
+  };
 
+  // Fetch user data from the database and update the local state
   const fetchUserData = async () => {
     const username = localUserData.username;
     const user = await getUser(username);
@@ -97,12 +75,14 @@ const UserProfileScreen = () => {
     }
   };
 
+  // Hook for fetching user data when the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchUserData();
     }, [])
   );
 
+  // Render the screen
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
@@ -121,7 +101,6 @@ const UserProfileScreen = () => {
             </TouchableOpacity>
           </View>
 
-          {/* <Text style={styles.text}>User Profile</Text> */}
           <View style={styles.listUserOptions}>
             <Text style={styles.textOptions}>
               {`\u25AA `}Username: {userData.username}
@@ -154,6 +133,10 @@ const UserProfileScreen = () => {
               {`\u25AA `} Weight: {userData.userWeight} kg
             </Text>
           </View>
+
+          {/* TODO: delete button */}
+          <Button name="getUsers" onPress={handleGetUsers} title="Get Users" /> 
+
         </ScrollView>
         <TouchableOpacity
           style={styles.button}
@@ -197,6 +180,7 @@ const UserProfileScreen = () => {
   );
 };
 
+// Style definition for the UserProfileScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -206,7 +190,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     justifyContent: "space-between",
-    // marginRight: 20,
   },
   scrollViewContent: {
     paddingHorizontal: 20,
@@ -314,7 +297,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: -120,
   },
-  // Modal styles
+  // ----------------- Modal styles -----------------
   backgroundOverlay: {
     top: 0,
     left: 0,

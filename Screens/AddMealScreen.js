@@ -4,11 +4,8 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Button,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   Alert,
   Image,
   Platform,
@@ -20,19 +17,24 @@ import { useNavigation } from "@react-navigation/native";
 import { saveMeal } from "../Data";
 import RNPickerSelect from "react-native-picker-select";
 import DatePicker from "../Components/DatePicker";
-import DietScreen from "./DietScreen";
 import ActionSheet from "react-native-actionsheet";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
 
+/**
+ * AddMealScreen models the screen for adding a meal to the user's diet.
+ * The user can add: date, meal, calories, description and image of the meal.
+ * The logged-in user is stored in the meal as the value of the "userMeal" attribute.
+ * When the user adds a meal, the meal is stored in AsyncStorage and
+ * if the operation is successful, the user is redirected to the Diet screen.
+ */
+
 const AddMealScreen = () => {
-  // verifica userdata format
   const { userData } = useUser();
 
-  // The user associated with the meal is the logged in user
+  // Get the username of the logged-in user
   const userMeal = userData.username;
 
-  // console.log(userData.username);  // ludov
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("");
   const [calories, setCalories] = useState("");
@@ -43,6 +45,7 @@ const AddMealScreen = () => {
   const actionSheetRef = useRef();
   const navigation = useNavigation();
 
+  // useEffect hook to request permissions for accessing the camera and camera roll
   useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
@@ -51,6 +54,7 @@ const AddMealScreen = () => {
         const { status: cameraStatus } =
           await ImagePicker.requestCameraPermissionsAsync();
 
+        // If permissions are not granted, show an alert to the user
         if (libraryStatus !== "granted" || cameraStatus !== "granted") {
           Alert.alert(
             "Permissions required",
@@ -86,6 +90,7 @@ const AddMealScreen = () => {
     setImage(uri);
   };
 
+  // Function to pick an image from the camera roll
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -99,6 +104,7 @@ const AddMealScreen = () => {
     }
   };
 
+  // Function to take a photo with the camera
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -111,6 +117,7 @@ const AddMealScreen = () => {
     }
   };
 
+  // Function to handle the selection from an action sheet
   const handleActionSheet = async (actionIndex) => {
     if (actionIndex === 0) {
       await pickImage();
@@ -119,11 +126,14 @@ const AddMealScreen = () => {
     }
   };
 
+  // Displays the action sheet by calling the `show` method on the action sheet reference.
   const showActionSheet = () => {
     actionSheetRef.current.show();
   };
 
+  // Function that handle the addition of a meal
   const handleAddMeal = async () => {
+    // Necessary fields for adding a meal
     if (!date || !category || !mealDetails) {
       setError("Fill main fields");
       return;
@@ -131,6 +141,7 @@ const AddMealScreen = () => {
     setError("");
     stringDate = date.toDateString();
 
+    // Meal object to be stored in AsyncStorage
     const meal = {
       userMeal,
       stringDate,
@@ -139,13 +150,12 @@ const AddMealScreen = () => {
       mealDetails,
       image,
     };
-    console.log("Meal:", meal);
     try {
       // Server function for storing meal with AsyncStorage
       await saveMeal(meal);
       console.log("Meal saved", meal);
 
-      // Navigate to the Diet screen
+      // Navigation to the Diet screen
       navigation.navigate("DietScreen");
     } catch (error) {
       console.error("Error saving meal:", error);
@@ -153,6 +163,11 @@ const AddMealScreen = () => {
     }
   };
 
+  /**
+   * Render of the "Add Meal" screen using the handle functions. 
+   * It uses KeyboardAvoidingView to ensure the keyboard does not cover input fields.
+   * and ScrollView to allow scrolling if the content exceeds the screen size.
+   */
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -241,6 +256,7 @@ const AddMealScreen = () => {
   );
 };
 
+// Style definition for the AddMealScreen 
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
@@ -345,6 +361,7 @@ const styles = StyleSheet.create({
   },
 });
 
+// Styles for the picker of meal types
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     width: "100%",

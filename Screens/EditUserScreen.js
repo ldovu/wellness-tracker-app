@@ -1,35 +1,28 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
-  Button,
-  TouchableOpacity,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
-  Alert,
-  Image,
   Platform,
   KeyboardAvoidingView,
   Pressable,
 } from "react-native";
 import { useUser } from "./UserContext";
 import { useNavigation } from "@react-navigation/native";
-import { saveMeal, getUsers, updateUser } from "../Data";
-
+import { updateUser } from "../Data";
 import { RadioButton } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
-import DatePicker from "../Components/DatePicker";
-import DietScreen from "./DietScreen";
-import ActionSheet from "react-native-actionsheet";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import * as ImagePicker from "expo-image-picker";
+
+
+/**
+ * EditUserScreen models the screen for editing the user's profile details.
+ * The user can only edit the profile details, not the username or password.
+*/
 
 const EditUserScreen = () => {
   const { userData } = useUser();
-  const navigation = useNavigation();
   const [userAge, setUserAge] = useState(userData.userAge);
   const [userDiet, setUserDiet] = useState(userData.userDiet);
   const [userGender, setUserGender] = useState(userData.userGender);
@@ -37,16 +30,10 @@ const EditUserScreen = () => {
   const [userWeight, setUserWeight] = useState(userData.userWeight);
   const [error, setError] = useState("");
 
-  // const handleGetUsers = async () => {
-  //   const users = await getUsers();
-  //   console.log("Users:", users);
-  //   const usernamesList = users.map((user) => user.username);
-  //   console.log("Usernames:", usernamesList);
-  // };
-
+  const navigation = useNavigation();
   const loggedUser = userData.username;
-  console.log("Logged user:", loggedUser);
 
+  // Function for handling the update of the user's profile: if the user does not change a field, the old value is kept
   const handleUpdate = async () => {
     const updatedAttributes = {
       userAge: userAge || userData.userAge,
@@ -56,16 +43,17 @@ const EditUserScreen = () => {
       userWeight: userWeight || userData.userWeight,
     };
 
-    console.log("Updated attributes:", updatedAttributes);
     try {
       await updateUser(loggedUser, updatedAttributes);
-      console.log("Profile updated successfully.");
+      console.log("Profile updated successfully."); // Debugging message
       navigation.navigate("SettingScreen");
     } catch (error) {
-      console.error("An error occurred while updating profile.");
+      console.error("An error occurred while updating profile."); 
       setError(error.message);
     }
   };
+
+  // Render of the EditUserScreen 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -169,6 +157,7 @@ const EditUserScreen = () => {
   );
 };
 
+// Style definition for the EditUserScreen
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
@@ -229,8 +218,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    // shadowOpacity: 0.25,
-    // shadowRadius: 3.84,
+   
   },
   radioButton: {
     flexDirection: "row",
@@ -305,6 +293,8 @@ const styles = StyleSheet.create({
   },
 });
 
+
+// Style definition for the picker component
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     width: "100%",

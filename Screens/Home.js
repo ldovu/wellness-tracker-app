@@ -1,38 +1,24 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, StatusBar } from "react-native";
 import { getUser } from "../Data";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useUser, UserProvider } from "./UserContext";
+import { UserProvider } from "./UserContext";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MenuProvider } from "react-native-popup-menu";
 import TrainingScreen from "./TrainingScreen";
 import DietScreen from "./DietScreen";
 import UserProfileScreen from "./UserProfileScreen";
-import SettingScreen from "./UserProfileScreen";
 import SplashScreen from "./SplashScreen";
 import CustomHeader from "../Components/CustomHeader";
 import AddMealScreen from "./AddMealScreen";
 import AddTrainingScreen from "./AddTrainingScreen";
 import EditUserScreen from "./EditUserScreen";
 
-
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+// Stack navigators for the Diet, Training, and User Profile screens
 const DietStack = () => (
   <Stack.Navigator>
     <Stack.Screen
@@ -63,7 +49,6 @@ const TrainingStack = () => (
   </Stack.Navigator>
 );
 
-
 const UserProfileStack = () => (
   <Stack.Navigator>
     <Stack.Screen
@@ -79,11 +64,16 @@ const UserProfileStack = () => (
   </Stack.Navigator>
 );
 
+/**
+ * Home screen defines the skeleton of the app's main screen
+ * Create a Tab Navigator with the DietStack, TrainingStack, and UserProfileStack
+ * Uses UserProvider to provide the user data to its children
+ */
 const Home = ({ route }) => {
   const user = route?.params?.user;
-
   const [userData, setUserData] = useState("");
 
+  // Hook to fetch user data when the screen is loaded
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -99,7 +89,7 @@ const Home = ({ route }) => {
 
     fetchUserData();
   }, [user]);
-  // Render a loading screen or placeholder while fetching data
+  // Render splash screen while fetching data
   if (!userData) {
     return <SplashScreen />;
   }
@@ -155,31 +145,5 @@ const Home = ({ route }) => {
     </UserProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  tabNavigator: {
-    backgroundColor: "#f9f8eb",
-  },
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    backgroundColor: "#f9f8eb",
-  },
-  scrollViewContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-
-  title: {
-    fontSize: 54,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-
-  welcome: {
-    fontSize: 40,
-    marginBottom: 16,
-  },
-});
 
 export default Home;

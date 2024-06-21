@@ -4,11 +4,8 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Button,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   Alert,
   Image,
   Platform,
@@ -17,20 +14,25 @@ import {
 } from "react-native";
 import { useUser } from "./UserContext";
 import { useNavigation } from "@react-navigation/native";
-import { saveMeal, saveTraining,  } from "../Data";
+import { saveTraining } from "../Data";
 import RNPickerSelect from "react-native-picker-select";
 import DatePicker from "../Components/DatePicker";
-import DietScreen from "./DietScreen";
 import ActionSheet from "react-native-actionsheet";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
 
-import TrainingScreen from "./TrainingScreen";
+/**
+ * AddTrainingScreen models the screen for adding a training to the user's training.
+ * The user can add: date, type of sport, duration, burnt calories, description, and an image.
+ * The logged-in user is stored in the training as the value of "userTraining" attribute.
+ * When the user adds a training, the training is saved in the AsyncStorage and
+ * if the operation is successful, the user is redirected to the TrainingScreen.
+ */
 
 const AddTrainingScreen = () => {
   const { userData } = useUser();
 
-  // The user associated with the training is the logged in user
+  // Get the username of the logged-in user
   const userTraining = userData.username;
 
   // console.log(userData.username);  // ludov
@@ -46,6 +48,7 @@ const AddTrainingScreen = () => {
   const actionSheetRef = useRef();
   const navigation = useNavigation();
 
+  // UseEffect hook to request permissions for accessing the camera and camera roll
   useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
@@ -54,6 +57,7 @@ const AddTrainingScreen = () => {
         const { status: cameraStatus } =
           await ImagePicker.requestCameraPermissionsAsync();
 
+        // If permissions are not granted, show an alert to the user
         if (libraryStatus !== "granted" || cameraStatus !== "granted") {
           Alert.alert(
             "Permissions required",
@@ -89,9 +93,6 @@ const AddTrainingScreen = () => {
     setSelectedMinute(minutes);
   };
 
-  console.log("Selected hour:", selectedHour);
-  console.log("Selected minute:", selectedMinute);
-
   const handleBurntCaloriesChange = (calories) => {
     const cleanedCalories = calories.replace(/[^0-9]/g, "");
     const parsedValue = parseInt(cleanedCalories, 10);
@@ -110,6 +111,7 @@ const AddTrainingScreen = () => {
     setImage(uri);
   };
 
+  // Function to pick an image from the camera roll
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -123,6 +125,7 @@ const AddTrainingScreen = () => {
     }
   };
 
+  // Function to take a photo with the camera
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -135,6 +138,7 @@ const AddTrainingScreen = () => {
     }
   };
 
+  // Function to handle the selection from an action sheet
   const handleActionSheet = async (actionIndex) => {
     if (actionIndex === 0) {
       await pickImage();
@@ -143,10 +147,12 @@ const AddTrainingScreen = () => {
     }
   };
 
+  // Displays the action sheet by calling the `show` method on the action sheet reference.
   const showActionSheet = () => {
     actionSheetRef.current.show();
   };
 
+  // Function to handle the addition of a training
   const handleAddTraining = async () => {
     if (
       !date ||
@@ -161,7 +167,6 @@ const AddTrainingScreen = () => {
     }
 
     setError("");
-    // const duration = `${hours}h ${minutes}m`;
     const stringDate = date.toDateString();
     const training = {
       userTraining,
@@ -176,7 +181,6 @@ const AddTrainingScreen = () => {
     console.log("Training:", training);
     try {
       // Server function for storing training with AsyncStorage
-      console.log("Saving", training);
       await saveTraining(training);
       console.log("Training saved", training);
 
@@ -188,6 +192,11 @@ const AddTrainingScreen = () => {
     }
   };
 
+  /**
+   * Render of the "Add Training" screen using the handle functions.
+   * It uses KeyboardAvoidingView to ensure the keyboard does not cover input fields.
+   * and ScrollView to allow scrolling if the content exceeds the screen size.
+   */
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -306,6 +315,7 @@ const AddTrainingScreen = () => {
   );
 };
 
+// Style definition for the AddTrainingScreen
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
@@ -417,6 +427,7 @@ const styles = StyleSheet.create({
   },
 });
 
+// Styles for the picker of sports
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     width: "100%",
@@ -426,8 +437,6 @@ const pickerSelectStyles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     marginBottom: 10,
-    // paddingLeft: 10,
-    // paddingRight: 10,
     textAlign: "center",
     color: "#f9f8eb",
     fontSize: 18,
@@ -456,6 +465,7 @@ const pickerSelectStyles = StyleSheet.create({
   },
 });
 
+// Styles for the picker of hours and minutes
 const pickerHrsMin = StyleSheet.create({
   inputIOS: {
     width: 70,

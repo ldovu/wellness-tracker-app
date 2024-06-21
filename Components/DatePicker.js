@@ -2,15 +2,23 @@ import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, View, Text } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+/**
+ * DatePicker component displays a date picker for selecting a date.
+ * The component uses the DateTimePicker component from @react-native-community/datetimepicker.
+ */
+
 const DatePicker = ({ onSelectDate }) => {
+  // State to keep track of the selected date initialized with the current date
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const onChange = (event, selectedDate) => {
+  // Handle date change event and update the state of selectedDate
+  const onChange = (selectedDate) => {
     const currentDate = selectedDate || selectedDate;
     setSelectedDate(currentDate);
     onSelectDate(currentDate); // Callback to parent component with selected date
   };
 
+  // Set the maximum selectable date to today
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate()); // Next day
 
@@ -31,6 +39,8 @@ const DatePicker = ({ onSelectDate }) => {
     </SafeAreaView>
   );
 };
+
+// Style definition for the element of the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -56,7 +66,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   datePicker: {
-    // width: "40%",
     marginRight: 55,
   },
 });

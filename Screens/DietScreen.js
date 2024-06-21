@@ -1,36 +1,19 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  Button,
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
   StatusBar,
-  Alert,
   Image,
-  Platform,
-  Dimensions,
-  Pressable,
-  FlatList,
-  KeyboardAvoidingView,
-  Modal,
 } from "react-native";
-import {
-  useRoute,
-  useNavigation,
-  useFocusEffect,
-} from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useUser } from "./UserContext";
-import { getMeals, fetchImages, saveImage, removeImage } from "../Data";
-import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import ActionSheet from "react-native-actionsheet";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { getMeals } from "../Data";
 
+// Variable that defines the order of the categories
 const categoryOrder = {
   Breakfast: 1,
   Lunch: 2,
@@ -38,16 +21,27 @@ const categoryOrder = {
   Snack: 4,
 };
 
+/**
+ * DietScreen models the screen for displaying the user's meals.
+ * The user can see the details of the meal he/she has added.
+ * The user can add a new meal by pressing the button "Add New Meal".
+ */
+
 const DietScreen = () => {
-  const navigation = useNavigation();
+  const { userData } = useUser();
   const [meals, setMeals] = useState([]);
 
-  const { userData } = useUser();
-  
+  const navigation = useNavigation();
+
   const handleAddMealPress = () => {
     navigation.navigate("AddMeal");
   };
 
+  /**
+   * Asynchronous function that fetches the meals from the storage with "getMeals"
+   * and filters them based on the current logged in user.
+   * The meals are then set to the state variable "meals".
+   */
   const fetchMeals = async () => {
     try {
       const storedMeals = await getMeals();
@@ -66,14 +60,20 @@ const DietScreen = () => {
     }
   };
 
-  //
+  // Hook that fetches the meals whenever the screen is focused
+  // The presence of the dependecy userData.username ensures that any change in the username triggers a re-fetch
   useFocusEffect(
     useCallback(() => {
       fetchMeals();
     }, [userData.username])
   );
 
+  // Function that renders a general training in the screen
   const renderMeals = () => {
+    
+    // Group meals by their date
+    // e.g. groupedMeals = { "01-06-2024: [meal1, meal2], "02-06-2024": [meal3], ...}
+    //                       where meal1, meal2, meal3 are objects representing meals
     const groupedMeals = meals.reduce((acc, meal) => {
       const date = meal.stringDate;
       if (!acc[date]) {
@@ -83,20 +83,20 @@ const DietScreen = () => {
       return acc;
     }, {});
 
-    // Sort the dates in ascending order from the furthest to the nearest
+    // Sort the dates in ascending order
     const sortedDates = Object.keys(groupedMeals).sort(
       (a, b) => new Date(a) - new Date(b)
     );
 
+    // Render the trainings
     return sortedDates.map((date) => {
       // Grouped the meals by date
       const mealsForDate = groupedMeals[date];
 
-      // Sort the meals by category order depending on the categoryOrder object
+      // Sort the meals by category order depending on the categoryOrder variable
       const sortedMeals = mealsForDate.sort((a, b) => {
         const orderA = categoryOrder[a.category] ?? Number.MAX_SAFE_INTEGER;
         const orderB = categoryOrder[b.category] ?? Number.MAX_SAFE_INTEGER;
-        // console.log(`confronto: ${a.category} (${orderA}) - ${b.category} (${orderB})`);
         return orderA - orderB;
       });
       return (
@@ -118,6 +118,8 @@ const DietScreen = () => {
       );
     });
   };
+
+  // Renders the main screen recalling the renderMeals function
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
@@ -132,6 +134,8 @@ const DietScreen = () => {
   );
 };
 
+
+// Styles for the DietScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,

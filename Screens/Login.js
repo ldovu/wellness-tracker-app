@@ -8,16 +8,18 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  Button,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { getUser } from "../Data";
-import Home from "./Home";
 import Icon from "react-native-vector-icons/Ionicons";
 
+/**
+ * LoginScreen models the screen for the user login.
+ * The user can input the username and password, with the possibility to show/hide the password.
+ * The user can navigate to the SignupScreen if he/she is not registered.
+ */
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +32,7 @@ const LoginScreen = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
+  // Handle the login of the user by checking the username and password
   const handleLogin = async () => {
     if (!username) {
       alert("Username is required");
@@ -43,11 +46,12 @@ const LoginScreen = () => {
     try {
       const storedUsername = await getUser(username);
       console.log("User found: ", username);
-      console.log("Password: ", password);
-      console.log(storedUsername.password);
+
+      // Check if the password is correct
       if (storedUsername.password === password) {
         console.log("Stored user:", storedUsername);
-        // In home prenderai da route user
+
+        // Navigate to the Home screen and pass the user object as a parameter
         navigation.navigate("Home", { user: storedUsername });
       } else {
         setError("Invalid credentials");
@@ -57,6 +61,7 @@ const LoginScreen = () => {
     }
   };
 
+  // Render the login screen
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -118,6 +123,7 @@ const LoginScreen = () => {
   );
 };
 
+// Styles for the LoginScreen
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,

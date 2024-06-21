@@ -4,7 +4,6 @@ import {
   View,
   TextInput,
   Image,
-  Button,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,16 +11,17 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RadioButton } from "react-native-paper";
-import NumberInput from "../Components/NumberInput";
 import { useNavigation } from "@react-navigation/native";
 import RNPickerSelect from "react-native-picker-select";
-import { addUser } from "../Data";
+import { addUser, getUser } from "../Data";
+
+/**
+ * Signup models the screen for the user registration.
+ * The user registers by providing the username, password, gender, age, height, weight, and type of diet.
+ */
 
 const Signup = () => {
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userGender, setUserGender] = useState("");
@@ -33,22 +33,13 @@ const Signup = () => {
 
   const navigation = useNavigation();
 
-  const handleNameChange = (newName) => {
-    // VERIFICA
-    setName(newName.replace(/\s/g, ""));
-  };
-  const handleSurnameChange = (newSurname) => {
-    setSurname(newSurname);
-  };
   const handleUsernameChange = (newUsername) => {
     setUsername(newUsername);
   };
   const handlePasswordChange = (newPassword) => {
     setPassword(newPassword);
   };
-  const handleUserGenderChange = (newGender) => {
-    setUserGender(newGender);
-  };
+
   const handleUserAgeChange = (newAge) => {
     const cleanedAge = newAge.replace(/[^0-9]/g, "");
     const parsedValue = parseInt(cleanedAge, 10);
@@ -82,6 +73,7 @@ const Signup = () => {
     setUserDiet(newDiet);
   };
 
+  // Handle signup by checking that the input field are not empty and the username chosen is unique
   const handleSignup = async () => {
     if (
       !username ||
@@ -105,10 +97,15 @@ const Signup = () => {
       userWeight,
       userDiet,
     };
-    console.log("User profile before being saved:", userProfile);
 
     try {
-      // Server function for storing user with AsyncStorage
+      // Check if the username is already taken
+      const existingUser = await getUser(username);
+      if (existingUser) {
+        setError("Username is already taken. Please choose another one.");
+        return;
+      }
+      // Use AddUser function to save the user profile
       await addUser(userProfile);
       console.log("User profile saved", userProfile);
 
@@ -120,12 +117,7 @@ const Signup = () => {
     }
   };
 
-  // const isUsernameUnique = async (newUsername) => {
-  //   const keys = await AsyncStorage.getAllKeys();
-  //   const usernameExists = keys.some((key) => key === `${newUsername}_key`);
-  //   return !usernameExists;
-  // };
-
+  // Render the signup screen
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -219,32 +211,7 @@ const Signup = () => {
                 keyboardType="numeric"
               />
             </View>
-            {/* <View style={styles.buttonRow}>
-            <TouchableOpacity
-              style={styles.buttonOptionsDiet}
-              onPress={() => handleUserDietChange("Vegetarian")}
-            >
-              <Text style={styles.buttonTextOptions}>Vegetarian</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonOptionsDiet}
-              onPress={() => handleUserDietChange("Vegan")}
-            >
-              <Text style={styles.buttonTextOptions}>Vegan</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonOptionsDiet}
-              onPress={() => handleUserDietChange("Omnivorous")}
-            >
-              <Text style={styles.buttonTextOptions}>Omnivorous</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonOptionsDiet}
-              onPress={() => handleUserDietChange("Other")}
-            >
-              <Text style={styles.buttonTextOptions}>Other</Text>
-            </TouchableOpacity>
-          </View> */}
+
             <View style={styles.row}>
               <Text style={styles.textOptions}>Diet</Text>
               <View style={styles.containerPicker}>
@@ -263,13 +230,15 @@ const Signup = () => {
             </View>
 
             <View style={styles.row}>
-              {error ? <Text style={styles.errorText}>{error}</Text> : null}
               <Pressable
                 style={styles.buttonRegistration}
                 onPress={handleSignup}
               >
                 <Text style={styles.buttonText}>Register</Text>
               </Pressable>
+            </View>
+            <View style={styles.errorSpace}>
+              {error ? <Text style={styles.errorText}>{error}</Text> : null}
             </View>
             <View style={styles.row}>
               <View style={styles.backToLogin}>
@@ -286,6 +255,7 @@ const Signup = () => {
   );
 };
 
+// Styles for the Signup screen
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
@@ -454,6 +424,9 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 10,
     fontSize: 20,
+  },
+  errorSpace: {
+    width: "80%",
   },
 });
 

@@ -1,29 +1,15 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
-import { logoutUser } from "../Data";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from "react-native-popup-menu";
-import { useNavigation } from "@react-navigation/native";
-import Modal from "react-native-modal";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+
+
+/**
+ * CustomHeader component models the header of the main screens.
+ * The header displays:
+ *   - The title of the screen
+ *   - The user's avatar, represented by the first letter of their username
+ */
 
 const CustomHeader = ({ title, username }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation();
-
-  const handleLogout = async () => {
-    await logoutUser();
-    navigation.reset({
-      index: 0,
-      actions: [navigation.navigate("Login")],
-    });
-    console.log("User logged out");
-    setModalVisible(false);
-  };
-
   return (
     <View style={styles.header}>
       <Text style={styles.title}>{title}</Text>
@@ -38,6 +24,7 @@ const CustomHeader = ({ title, username }) => {
   );
 };
 
+// Style definition for the header component
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
@@ -66,19 +53,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  menuOption: {
-    padding: 10,
-    fontSize: 16,
-    color: "#0b2b2f",
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  
-
 });
 
 export default CustomHeader;

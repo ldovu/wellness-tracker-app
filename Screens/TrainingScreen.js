@@ -1,42 +1,39 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  Button,
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
   StatusBar,
-  Alert,
   Image,
-  Platform,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  useRoute,
-  useNavigation,
-  useFocusEffect,
-} from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useUser } from "./UserContext";
 import { getTrainings } from "../Data";
-import * as ImagePicker from "expo-image-picker";
 
-import ActionSheet from "react-native-actionsheet";
+/**
+ * TrainingScreen models the screen for displaying the user's trainings.
+ * The user can see the details of the training he/she has added.
+ * The user can add a new training by pressing the button "Add New Training".
+ */
 
 const TrainingScreen = () => {
-  const navigation = useNavigation();
   const { userData } = useUser();
   const [trainings, setTrainings] = useState([]);
+
+  const navigation = useNavigation();
 
   const handleAddTrainingPress = () => {
     navigation.navigate("AddTraining");
   };
 
-  // console.log("User data in Training:", userData.userData);
-  console.log("U:", userData);
-
+  /**
+   * Asynchronous function that fetches the trainings from the storage with "getTrainings"
+   * and filters them based on the current logged in user.
+   * The trainings are then set to the state variable "trainings".
+   */
   const fetchTrainings = async () => {
     try {
       const storedTrainings = await getTrainings();
@@ -44,7 +41,6 @@ const TrainingScreen = () => {
         const userTrainings = storedTrainings.filter(
           (training) => training.userTraining === userData.username
         );
-        // console.log("User trainings:", userTrainings);
         setTrainings(userTrainings);
       } else {
         setTrainings([]);
@@ -54,14 +50,20 @@ const TrainingScreen = () => {
     }
   };
 
-  // Each time the focus is one the screen the view is updated
+  // Hook that fetches the trainings whenever the screen is focused
+  // The presence of the dependecy userData.username ensures that any change in the username triggers a re-fetch
   useFocusEffect(
     useCallback(() => {
       fetchTrainings();
-    }, [])
+    }, [userData.username])
   );
 
+  // Function that renders a general training in the screen
   const renderTrainings = () => {
+    
+    // Group trainings by their date
+    // e.g. groupedTrainings = { "01-06-2024: [training1, training2], "02-06-2024": [training3], ...}
+    //                       where training1, training2, training3 are objects representing trainings
     const groupedTrainings = trainings.reduce((acc, training) => {
       const date = training.stringDate;
       if (!acc[date]) {
@@ -71,11 +73,14 @@ const TrainingScreen = () => {
       return acc;
     }, {});
 
+    // Sort the dates in ascending order
     const sortedTrainings = Object.keys(groupedTrainings).sort(
       (a, b) => new Date(a) - new Date(b)
     );
 
+    // Render the trainings
     return sortedTrainings.map((date) => {
+      // Group trainings by their date
       const trainingsForDate = groupedTrainings[date];
       return (
         <View key={date} style={styles.trainingGroup}>
@@ -105,6 +110,7 @@ const TrainingScreen = () => {
     });
   };
 
+  // Renders the main screen recalling the renderTrainings function
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
@@ -122,6 +128,7 @@ const TrainingScreen = () => {
   );
 };
 
+// Styles for the TrainingScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,

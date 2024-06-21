@@ -1,14 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as FileSystem from "expo-file-system";
-import { Alert } from "react-native";
 
+/**
+ * This file defines all the function that are related to the storage of the data.
+ * The data persistency is managed by the AsyncStorage API.
+ */
+
+// Constants that define the keys for the storage
 const Users_KEY = "@users";
 const Activities_KEY = "@activities";
 const Meals_KEY = "@meals";
-const Images_KEY = "@images";
 
-// AyncStorage permette di salvare stringhe nel database
-// se volessi salvare un oggetto dovrei convertirlo in stringa
 
 // Get a single user by username
 export const getUser = async (username) => {
@@ -21,6 +22,7 @@ export const getUser = async (username) => {
   }
 };
 
+// Update a user by taking the username and the updated attributes
 export const updateUser = async (username, updatedUserAttributes) => {
   try {
     const user = await getUser(username);
@@ -35,33 +37,7 @@ export const updateUser = async (username, updatedUserAttributes) => {
   }
 };
 
-
-// export const deleteLastUser = async () => {
-//   try {
-//     // Retrieve existing users
-//     const users = await getUsers();
-
-//     // Check if there are users to delete
-//     if (users.length === 0) {
-//       console.log("No users found to delete.");
-//       return false;
-//     }
-
-//     // Remove the last user from the array
-//     const removedUser = users.pop();
-
-//     // Remove the user from AsyncStorage
-//     await AsyncStorage.removeItem(`${removedUser.username}${Users_KEY}`);
-
-//     console.log(`User ${removedUser.username} deleted successfully.`);
-//     return true;
-//   } catch (error) {
-//     console.error("Error deleting the last user: ", error);
-//     return false;
-//   }
-// };
-
-// Get all users
+// Get all users registered in the application
 export const getUsers = async () => {
   try {
     const keys = await AsyncStorage.getAllKeys();
@@ -80,29 +56,6 @@ export const getUsers = async () => {
   }
 };
 
-export const deleteAllUsersExceptFirst = async () => {
-  try {
-    const users = await getUsers();
-
-    if (users.length > 0) {
-      const firstUser = users[0];
-
-      // Delete all users
-      const keys = await AsyncStorage.getAllKeys();
-      const userKeys = keys.filter((key) => key.endsWith(Users_KEY));
-      await AsyncStorage.multiRemove(userKeys);
-
-      // Save only the first user back to storage
-      // await saveUser(firstUser.username, firstUser);
-
-      console.log("All users except the first one have been deleted.");
-    } else {
-      console.log("No users found to delete.");
-    }
-  } catch (error) {
-    console.error("Error deleting users:", error);
-  }
-};
 // Save a single user by username
 export const saveUser = async (username, user) => {
   try {
@@ -126,10 +79,7 @@ export const addUser = async (user) => {
   }
 };
 
-
-
-
-
+// Save meal with the proper key
 export const saveMeal = async (meal) => {
   try {
     // Fetch the existing meals from storage
@@ -170,6 +120,7 @@ export const saveMeal = async (meal) => {
   }
 };
 
+// Get all the meals fetching them with the proper key
 export const getMeals = async () => {
   try {
     // Fetch the existing meals from storage
@@ -183,6 +134,7 @@ export const getMeals = async () => {
   }
 };
 
+// Save training with the proper key
 export const saveTraining = async (training) => {
   try {
     const existingTrainings = await AsyncStorage.getItem(Activities_KEY);
@@ -208,6 +160,7 @@ export const saveTraining = async (training) => {
   }
 };
 
+// Get all the trainings fetching them with the proper key
 export const getTrainings = async () => {
   try {
     const existingTrainings = await AsyncStorage.getItem(Activities_KEY);
@@ -218,6 +171,42 @@ export const getTrainings = async () => {
   }
 };
 
+// Simple function for outputting console log of the state of the user who is trying to log out 
+export const logoutUser = async () => {
+  try {
+    console.log("User logged out successfully!");
+  } catch (error) {
+    console.error("Error logging out user: ", error);
+  }
+};
+
+
+
+
+// export const deleteLastUser = async () => {
+//   try {
+//     // Retrieve existing users
+//     const users = await getUsers();
+
+//     // Check if there are users to delete
+//     if (users.length === 0) {
+//       console.log("No users found to delete.");
+//       return false;
+//     }
+
+//     // Remove the last user from the array
+//     const removedUser = users.pop();
+
+//     // Remove the user from AsyncStorage
+//     await AsyncStorage.removeItem(`${removedUser.username}${Users_KEY}`);
+
+//     console.log(`User ${removedUser.username} deleted successfully.`);
+//     return true;
+//   } catch (error) {
+//     console.error("Error deleting the last user: ", error);
+//     return false;
+//   }
+// };
 // export const deleteTraining = async () => {
 //   try {
 //     // Retrieve existing users
@@ -242,11 +231,3 @@ export const getTrainings = async () => {
 //     return false;
 //   }
 // };
-
-export const logoutUser = async () => {
-  try {
-    console.log("User logged out successfully!");
-  } catch (error) {
-    console.error("Error logging out user: ", error);
-  }
-};
