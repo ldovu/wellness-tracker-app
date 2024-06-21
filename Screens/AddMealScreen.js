@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
   Pressable,
 } from "react-native";
-import { useUser } from "./UserContext";
+import { useUser } from "../Components/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { saveMeal } from "../Data";
 import RNPickerSelect from "react-native-picker-select";
@@ -164,7 +164,7 @@ const AddMealScreen = () => {
   };
 
   /**
-   * Render of the "Add Meal" screen using the handle functions. 
+   * Render of the "Add Meal" screen using the handle functions.
    * It uses KeyboardAvoidingView to ensure the keyboard does not cover input fields.
    * and ScrollView to allow scrolling if the content exceeds the screen size.
    */
@@ -256,7 +256,7 @@ const AddMealScreen = () => {
   );
 };
 
-// Style definition for the AddMealScreen 
+// Style definition for the AddMealScreen
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,

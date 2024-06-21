@@ -3,7 +3,7 @@ import { StyleSheet, StatusBar } from "react-native";
 import { getUser } from "../Data";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { UserProvider } from "./UserContext";
+import { UserProvider } from "../Components/UserContext";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { MenuProvider } from "react-native-popup-menu";
 import FitnessScreen from "./FitnessScreen";

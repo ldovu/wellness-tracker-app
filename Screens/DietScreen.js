@@ -10,7 +10,7 @@ import {
   Image,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useUser } from "./UserContext";
+import { useUser } from "../Components/UserContext";
 import { getMeals } from "../Data";
 
 // Variable that defines the order of the categories
@@ -70,7 +70,6 @@ const DietScreen = () => {
 
   // Function that renders a general training in the screen
   const renderMeals = () => {
-    
     // Group meals by their date
     // e.g. groupedMeals = { "01-06-2024: [meal1, meal2], "02-06-2024": [meal3], ...}
     //                       where meal1, meal2, meal3 are objects representing meals
@@ -133,7 +132,6 @@ const DietScreen = () => {
     </SafeAreaView>
   );
 };
-
 
 // Styles for the DietScreen
 const styles = StyleSheet.create({

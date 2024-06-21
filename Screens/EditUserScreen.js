@@ -9,17 +9,16 @@ import {
   KeyboardAvoidingView,
   Pressable,
 } from "react-native";
-import { useUser } from "./UserContext";
+import { useUser } from "../Components/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { updateUser } from "../Data";
 import { RadioButton } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 
-
 /**
  * EditUserScreen models the screen for editing the user's profile details.
  * The user can only edit the profile details, not the username or password.
-*/
+ */
 
 const EditUserScreen = () => {
   const { userData } = useUser();
@@ -48,12 +47,12 @@ const EditUserScreen = () => {
       console.log("Profile updated successfully."); // Debugging message
       navigation.navigate("SettingScreen");
     } catch (error) {
-      console.error("An error occurred while updating profile."); 
+      console.error("An error occurred while updating profile.");
       setError(error.message);
     }
   };
 
-  // Render of the EditUserScreen 
+  // Render of the EditUserScreen
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -218,7 +217,6 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-   
   },
   radioButton: {
     flexDirection: "row",
@@ -292,7 +290,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-
 
 // Style definition for the picker component
 const pickerSelectStyles = StyleSheet.create({

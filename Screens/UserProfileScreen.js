@@ -10,7 +10,7 @@ import {
   Modal,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useUser } from "./UserContext";
+import { useUser } from "../Components/UserContext";
 import { getUser, logoutUser } from "../Data";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 

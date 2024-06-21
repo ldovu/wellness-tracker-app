@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
   Pressable,
 } from "react-native";
-import { useUser } from "./UserContext";
+import { useUser } from "../Components/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { saveTraining } from "../Data";
 import RNPickerSelect from "react-native-picker-select";

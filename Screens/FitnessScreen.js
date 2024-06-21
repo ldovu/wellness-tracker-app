@@ -9,11 +9,8 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import {
-  useNavigation,
-  useFocusEffect,
-} from "@react-navigation/native";
-import { useUser } from "./UserContext";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useUser } from "../Components/UserContext";
 import { getTrainings } from "../Data";
 
 /**
