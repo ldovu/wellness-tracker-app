@@ -1,4 +1,4 @@
-# Components Folder
+# Components folder
 
 - `CustomHeader.js`: manages the header of the main screens. The header includes:
     - The title of the screen
