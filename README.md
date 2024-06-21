@@ -6,7 +6,7 @@ This project was done for the exam of "Sistemi integrati e mobili" (Prof. Sylvio
 
 ### Description 
 
-Wellness Tracker is a React Native application built with Expo that allows users to log in, sign up, and manage their diet, fitness activities and profile information. The app features a tab navigator with three main sections: Diet, Fitness and Profile. User data is stored using async storage to ensure persistence across sessions.
+Wellness Tracker is a React Native application built with Expo that allows users to log in, sign up, and manage their diet, fitness activities and profile information. The app features a tab navigator with three main sections: Diet, Fitness and Profile. User data is stored using async storage. 
 
 ### Features
 
