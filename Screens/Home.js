@@ -6,7 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { UserProvider } from "./UserContext";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { MenuProvider } from "react-native-popup-menu";
-import TrainingScreen from "./TrainingScreen";
+import FitnessScreen from "./FitnessScreen";
 import DietScreen from "./DietScreen";
 import UserProfileScreen from "./UserProfileScreen";
 import SplashScreen from "./SplashScreen";
@@ -34,11 +34,11 @@ const DietStack = () => (
   </Stack.Navigator>
 );
 
-const TrainingStack = () => (
+const FitnessStack = () => (
   <Stack.Navigator>
     <Stack.Screen
-      name="TrainingScreen"
-      component={TrainingScreen}
+      name="FitnessScreen"
+      component={FitnessScreen}
       options={{ headerShown: false }}
     />
     <Stack.Screen
@@ -138,7 +138,7 @@ const Home = ({ route }) => {
           })}
         >
           <Tab.Screen name="Diet       " component={DietStack} />
-          <Tab.Screen name="Fitness " component={TrainingStack} />
+          <Tab.Screen name="Fitness " component={FitnessStack} />
           <Tab.Screen name="Profile  " component={UserProfileStack} />
         </Tab.Navigator>
       </MenuProvider>

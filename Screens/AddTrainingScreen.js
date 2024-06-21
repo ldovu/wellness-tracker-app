@@ -26,7 +26,7 @@ import * as ImagePicker from "expo-image-picker";
  * The user can add: date, type of sport, duration, burnt calories, description, and an image.
  * The logged-in user is stored in the training as the value of "userTraining" attribute.
  * When the user adds a training, the training is saved in the AsyncStorage and
- * if the operation is successful, the user is redirected to the TrainingScreen.
+ * if the operation is successful, the user is redirected to the FitnessScreen.
  */
 
 const AddTrainingScreen = () => {
@@ -185,7 +185,7 @@ const AddTrainingScreen = () => {
       console.log("Training saved", training);
 
       // Navigate to the Training screen
-      navigation.navigate("TrainingScreen");
+      navigation.navigate("FitnessScreen");
     } catch (error) {
       console.error("Error saving training:", error);
       setError(error.message);

@@ -17,12 +17,12 @@ import { useUser } from "./UserContext";
 import { getTrainings } from "../Data";
 
 /**
- * TrainingScreen models the screen for displaying the user's trainings.
+ * FitnessScreen models the screen for displaying the user's trainings.
  * The user can see the details of the training he/she has added.
  * The user can add a new training by pressing the button "Add New Training".
  */
 
-const TrainingScreen = () => {
+const FitnessScreen = () => {
   const { userData } = useUser();
   const [trainings, setTrainings] = useState([]);
 
@@ -130,7 +130,7 @@ const TrainingScreen = () => {
   );
 };
 
-// Styles for the TrainingScreen
+// Styles for the FitnessScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -220,4 +220,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrainingScreen;
+export default FitnessScreen;
