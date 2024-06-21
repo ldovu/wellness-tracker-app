@@ -9,7 +9,10 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import {
+  useNavigation,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { useUser } from "./UserContext";
 import { getTrainings } from "../Data";
 
@@ -60,7 +63,6 @@ const TrainingScreen = () => {
 
   // Function that renders a general training in the screen
   const renderTrainings = () => {
-    
     // Group trainings by their date
     // e.g. groupedTrainings = { "01-06-2024: [training1, training2], "02-06-2024": [training3], ...}
     //                       where training1, training2, training3 are objects representing trainings
