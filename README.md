@@ -15,10 +15,13 @@ Wellness Tracker is a React Native application built with Expo that allows users
 - **Fitness**: users can add their training.
 - **Profile**: users can modify their profile information and log out of the application.
 
-![Login Screen](./assets/LoginScreenScreenshot.png)
-![Diet Tab](./assets/DietScreenScreenshot.png)
-![Fitness Tab](./assets/FitnessScreenScreenshot.png)
-![Profile Tab](./assets/ProfileScreenScreenshot.png)
+## Screenshots
 
+<p align="center">
+  <img src="./assets/LoginScreenScreenshot.png" alt="Login Screen" width="200"/>
+  <img src="./assets/DietScreenScreenshot.png" alt="Diet Tab" width="200"/>
+  <img src="./assets/FitnessScreenScreenshot.png" alt="Fitness Tab" width="200"/>
+  <img src="./assets/ProfileScreenScreenshot.png" alt="Profile Tab" width="200"/>
+</p>
 
 
