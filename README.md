@@ -1,6 +1,5 @@
-# diet-fitness-tracker-app
+# diet-fitness-tracker-app  ![App Icon](./Images/logoapp.png)
 
-![App Icon](./Images/logoapp.png)
 
 This project was done for the exam of "Sistemi integrati e mobili" (Prof. Sylvio Barbon Junior, 2024) at the University of Trieste.
 
