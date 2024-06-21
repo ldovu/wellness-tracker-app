@@ -1,7 +1,8 @@
+import React, { createContext, useContext, useState } from 'react';
+
 /** This file is used for providing the UserContext to its children 
  * so to Tab Screens: FitnessScreen, DietScreen, UserProfileScreen
  */ 
-import React, { createContext, useContext, useState } from 'react';
 
 const UserContext = createContext();
 
