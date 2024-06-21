@@ -1,10 +1,12 @@
-# diet-fitness-tracker-app  <img src="./Images/logoapp.png" alt="App Logo" width="100" height="100">
+# diet-fitness-tracker-app 
 
-This project was done for the exam of "Sistemi integrati e mobili" (Prof. Sylvio Barbon Junior, 2024) at the University of Trieste.
+![Alt text](.Images/logoapp.png)
 
-### Description 
+#### This project was done for the exam of "Sistemi integrati e mobili" (Prof. Sylvio Barbon Junior, 2024) at the University of Trieste.
 
-Wellness Tracker is a React Native application built with Expo that allows users to log in, sign up, and manage their diet, fitness activities and profile information. The app features a tab navigator with three main sections: Diet, Fitness and Profile. User data is stored using async storage. 
+## Description 
+
+Wellness Tracker is a React Native application built with Expo that allows users to manage their diet and fitness activities. The app features a tab navigator with three main sections: Diet, Fitness and Profile. User data is stored using Async Storage. 
 
 ### Features
 
@@ -13,6 +15,10 @@ Wellness Tracker is a React Native application built with Expo that allows users
 - **Fitness**: users can add their training.
 - **Profile**: users can modify their profile information and log out of the application.
 
+![Login Screen](./assets/LoginScreenScreenshot.png)
+![Diet Tab](./assets/DietScreenScreenshot.png)
+![Fitness Tab](./assets/FitnessScreenScreenshot.png)
+![Profile Tab](./assets/ProfileScreenScreenshot.png)
 
 
 
