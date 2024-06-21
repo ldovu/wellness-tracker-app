@@ -1,6 +1,6 @@
 # diet-fitness-tracker-app 
 
-![Alt text](.Images/logoapp.png)
+![Alt text](./Images/logoapp.png)
 
 #### This project was done for the exam of "Sistemi integrati e mobili" (Prof. Sylvio Barbon Junior, 2024) at the University of Trieste.
 
@@ -17,7 +17,7 @@ Wellness Tracker is a React Native application built with Expo that allows users
 
 ## Screenshots
 
-<p align="center">
+<p align="left">
   <img src="./assets/LoginScreenScreenshot.png" alt="Login Screen" width="200"/>
   <img src="./assets/DietScreenScreenshot.png" alt="Diet Tab" width="200"/>
   <img src="./assets/FitnessScreenScreenshot.png" alt="Fitness Tab" width="200"/>
