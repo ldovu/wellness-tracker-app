@@ -14,10 +14,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.units.wellnessapp",
-      "config": {
-        "googleMapsApiKey": "AIzaSyCplMxmKITQRTICaFtwSbemqES491_VMxA"
-      }
+      "bundleIdentifier": "com.units.wellnessapp"
     },
     "android": {
       "adaptiveIcon": {

@@ -80,7 +80,6 @@ const Home = ({ route }) => {
         const userData = await getUser(user.username);
         if (userData) {
           setUserData(userData);
-          console.log("User data in Home:", userData);
         }
       } catch (error) {
         console.error("Error fetching user data", error);

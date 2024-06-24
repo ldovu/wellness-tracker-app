@@ -10,8 +10,8 @@ import {
   Image,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useUser } from "../Components/UserContext";
 import { getTrainings } from "../Data";
+import { useUser } from "../Components/UserContext";
 
 /**
  * FitnessScreen models the screen for displaying the user's trainings.

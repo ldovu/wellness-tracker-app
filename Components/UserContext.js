@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
-/** This file is used for providing the UserContext to its children 
+/** This file is used for providing the UserContext to its children
  * so to Tab Screens: FitnessScreen, DietScreen, UserProfileScreen
- */ 
+ */
 
 const UserContext = createContext();
 
@@ -19,4 +19,3 @@ export const UserProvider = ({ children, value }) => {
 
 // Custom hook to use the UserContext
 export const useUser = () => useContext(UserContext);
-

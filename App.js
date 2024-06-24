@@ -20,8 +20,6 @@ function App() {
           component={SplashScreen}
           options={{ headerShown: false }}
         />
-
-        {/* gestureEnabled property do not allow to go back by scrolling the page left */}
         <Stack.Screen
           name="Login"
           component={Login}

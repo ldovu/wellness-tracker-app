@@ -45,7 +45,7 @@ const EditUserScreen = () => {
     try {
       await updateUser(loggedUser, updatedAttributes);
       console.log("Profile updated successfully."); // Debugging message
-      navigation.navigate("SettingScreen");
+      navigation.navigate("UserProfileScreen");
     } catch (error) {
       console.error("An error occurred while updating profile.");
       setError(error.message);
