@@ -2,7 +2,7 @@
 
 This project was done for the exam of "Sistemi integrati e mobili" (Prof. Sylvio Barbon Junior, 2024) at the University of Trieste.
 
-The code is extensively commented, with each file containing a description of its main features at the beginning.
+The code is commented, with each file containing a description of its main features at the beginning.
 
 
 ## Description 

@@ -1,7 +1,9 @@
 # Screens folder
 
-- `AddMealScreen.js`: displays the screen for adding a meal to the user's diet. The meal includes the following details: date, meal type, calories, details, and an image.
-- `AddTrainingScreen.js`: displays the screen for adding a training to the user's training. The training includes the following details: date, sport, duration, calories, details, and an image.
+- `AddMealScreen.js`: displays the screen for adding a meal to the user's diet.
+  - The meal includes the following details: date, meal type, calories, details, and an image.
+- `AddTrainingScreen.js`: displays the screen for adding a training to the user's training.
+  - The training includes the following details: date, sport, duration, calories, details, and an image.
 - `DietScreen.js`: displays the user's meals sorted by date and, within each date, sorted by meal type (in the order of breakfast, lunch, dinner, snack) and allows the user to add a new meal.
 - `EditUserScreen.js`: displays the screen for editing the user's profile details (excluding username and password). 
 - `FitnessScreen.js`: displays the user's trainings sorted by date and allows the user to add a new training. 
